@@ -633,19 +633,21 @@ add({ ch: 3, ref: "3장 6절 1)·2) 83–84쪽", sub: [
 add({ ch: 3, ref: "3장 6절 3) 85–89쪽", sub: [
   "운영 중인 공개 시범 서비스의 실제 화면입니다.",
   "질의 기준 시점의 판으로 확인하는 조문, 지역을 특정한 질의의 조례 연계 답변, 통칭으로 부른 법령의 식별을 세 사례로 보여 드립니다.",
-  "카드의 링크를 누르면 서비스가 새 탭에서 열리고, 질의를 복사해 붙여 넣으면 같은 질의로 바로 시연할 수 있습니다. 정확도는 이 화면이 아니라 4장의 측정으로 판단합니다."],
+  "카드의 바로 실행 링크를 누르면 새 탭에서 같은 질의가 곧바로 전송되어 답변이 생성됩니다. 정확도는 이 화면이 아니라 4장의 측정으로 판단합니다."],
   html: (s) => {
   const sc = [["1", "질의 기준 시점의 판으로 확인하는 조문", "2015년에 사용승인을 받은 근린생활시설을 증축하려 할 때, 사용승인 당시 건축법 시행령상 방화구획 설치 기준은 어떻게 되어 있었나"], ["2", "지역을 특정한 질의와 조례 연계 답변", "서울특별시 제2종일반주거지역의 건폐율과 용적률 상한은 얼마인가"], ["3", "통칭으로 부른 법령의 식별", "국토계획법상 개발행위허가의 기준은 무엇인가"]];
   const URL = "https://alris.auri.re.kr";
+  /* 질의 링크(?q=…&run=1) — project-alris-1b, 2026. 11. 8. 23:44 운영 반영(커밋 3ef38d043). 열면 바로 질의가 전송됨 */
+  const RUN = (q) => URL + "/?q=" + encodeURIComponent(q) + "&run=1";
   return `<div class="slide">${hd(s, "공개 (시범) 서비스 화면으로 본 사용 예시")}
   <div style="position:absolute;left:60px;right:60px;top:116px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px">${sc.map((c, i) => `<div class="pn a-rise" ${d(.2 + i * .2)} style="position:relative;padding:12px 14px 14px;height:452px;overflow:hidden">
     <div style="display:flex;gap:10px;align-items:baseline"><span class="mono cy" style="font-weight:700;font-size:14px">사례 ${c[0]}</span><span style="font-size:16px;font-weight:700">${c[1]}</span></div>
     <div style="margin-top:8px;padding:8px 10px;border-radius:6px;background:rgba(10,20,36,.7);border:1px solid #2c4a74"><div class="mono mu2" style="font-size:11.5px">질의</div><div class="q-text" style="font-size:13px;line-height:1.45;margin-top:2px;user-select:text">「${c[2]}」</div>
-      <div style="display:flex;gap:8px;margin-top:7px"><button type="button" class="lnk" data-copy="${c[2]}">질의 복사</button><a class="lnk" href="${URL}" target="_blank" rel="noopener noreferrer">ALRIS에서 열기 ↗</a></div></div>
-    <a href="${URL}" target="_blank" rel="noopener noreferrer" title="ALRIS 공개 (시범) 서비스 열기" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:282px;overflow:hidden;border-radius:6px">
+      <div style="display:flex;gap:8px;margin-top:7px"><button type="button" class="lnk" data-copy="${c[2]}">질의 복사</button><a class="lnk" href="${RUN(c[2])}" target="_blank" rel="noopener noreferrer">ALRIS에서 바로 실행 ↗</a></div></div>
+    <a href="${RUN(c[2])}" target="_blank" rel="noopener noreferrer" title="이 질의를 ALRIS에서 바로 실행" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:282px;overflow:hidden;border-radius:6px">
       <img src="img/fig3_scr_${c[0]}_a.png" alt="사례 ${c[0]} 화면 위쪽" style="display:block;width:100%;border-radius:4px;border:1px solid var(--line)">
       <img src="img/fig3_scr_${c[0]}_b.png" alt="사례 ${c[0]} 화면 아래쪽" style="display:block;width:100%;border-radius:4px;border:1px solid var(--line)"></a></div>`).join("")}</div>
-  <div class="note a-fade" ${d(1)} style="top:586px"><span class="k">LIVE</span><span><a class="cy mono" href="https://alris.auri.re.kr" target="_blank" rel="noopener noreferrer" style="font-weight:700">alris.auri.re.kr ↗</a> — 로그인 없이 바로 질의 · 화면은 2026. 11. 8. 캡처 · 「질의 복사」 뒤 붙여 넣으면 같은 질의로 시연</span></div>
+  <div class="note a-fade" ${d(1)} style="top:586px"><span class="k">LIVE</span><span><a class="cy mono" href="https://alris.auri.re.kr" target="_blank" rel="noopener noreferrer" style="font-weight:700">alris.auri.re.kr ↗</a> — 「바로 실행」을 누르면 새 탭에서 같은 질의가 곧바로 전송됨(답변까지 40~70초) · 화면은 2026. 11. 8. 캡처</span></div>
   </div>`; } });
 
 /* 14-1~2 자율 실행 루프란 — 박사님 지시(11.08.): 무엇인지 먼저, 그다음 왜. 근거: 3장 7절 1)·2), 각주 s7-1·s7-2·s7-3, [표 3-5] */
