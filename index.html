@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>ALRIS 최종연구심의회</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* 관제실(C) 틀 · 1280×720 원판을 화면에 맞춰 키움 · 어두운 단일 화면(테마 전환 없음) */
+:root {
+  color-scheme: dark;
+  --void: #05090f; --bg0: #0a1424; --bg1: #17305a;
+  --ink: #e6eef8; --mu: #9fb3d1; --mu2: #7f93b3; --dim: #5f7393;
+  --line: #22385c; --panel: rgba(17, 31, 54, .82); --panel2: rgba(24, 44, 76, .7);
+  --cy: #4fd1e8; --cy2: #1e4f7a; --ok: #4fd1e8; --warn: #f4b740; --bad: #ff7a66;
+  --f-ui: "Noto Sans KR", "Malgun Gothic", sans-serif; --f-mono: "JetBrains Mono", Consolas, monospace;
+}
+html, body { height: 100%; }
+body { background: var(--void); color: var(--ink); font-family: var(--f-ui); margin: 0; }
+.page { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#deck { position: relative; width: 100%; flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-height: 0; }
+#deck:fullscreen { background: #000; padding: 0; }
+#stage { position: relative; overflow: hidden; border-radius: 8px; box-shadow: 0 24px 70px rgba(0,0,0,.6); max-width: 100%; }
+#deck:fullscreen #stage { border-radius: 0; box-shadow: none; }
+#canvas { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; font-size: 13px; color: var(--mu); max-width: 100%; }
+.ctl button { font: inherit; font-size: 13px; padding: 7px 12px; border-radius: 6px; border: 1px solid #2b3f60; background: #111c2e; color: var(--ink); cursor: pointer; }
+.ctl button:hover { border-color: var(--cy); }
+.ctl button[aria-pressed="true"] { background: #0f3a4a; border-color: var(--cy); color: var(--cy); }
+.ctl button:focus-visible, a:focus-visible { outline: 2px solid var(--cy); outline-offset: 2px; }
+.ctl .pos { font-family: var(--f-mono); min-width: 74px; text-align: center; }
+.ctl .hint { color: var(--dim); font-size: 12px; }
+@media (max-width: 600px) { .ctl .hint { display: none; } }
+
+/* ── 장면 공통 ── */
+.slide { position: absolute; inset: 0; width: 1280px; height: 720px; overflow: hidden; box-sizing: border-box;
+  background: radial-gradient(ellipse at 72% -8%, var(--bg1) 0%, var(--bg0) 58%); color: var(--ink); font-family: var(--f-ui); }
+.slide * { box-sizing: border-box; }
+.slide::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(79,209,232,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(79,209,232,.045) 1px, transparent 1px); background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 85%); }
+.slide.ch { background: radial-gradient(ellipse at 20% 50%, #123a5e 0%, #071020 62%); }
+.mono { font-family: var(--f-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.glow { text-shadow: 0 0 16px rgba(79,209,232,.55); }
+.cy { color: var(--cy); } .mu { color: var(--mu); } .mu2 { color: var(--mu2); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+.pn { position: absolute; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+.hd { position: absolute; left: 60px; right: 60px; top: 30px; display: flex; align-items: center; gap: 16px; }
+.hd .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--cy); box-shadow: 0 0 12px var(--cy); flex: none; }
+.hd .eb { font: 500 13px var(--f-mono); color: var(--cy); letter-spacing: .12em; }
+.hd .t { font-size: 29px; font-weight: 700; line-height: 1.25; margin-top: 2px; letter-spacing: -.01em; }
+.hd .ref { margin-left: auto; align-self: flex-start; margin-top: 4px; font: 500 14px var(--f-mono); color: var(--mu2); white-space: nowrap; }
+.lab { font: 700 13px var(--f-mono); color: var(--cy); letter-spacing: .1em; }
+.h3 { font-size: 20px; font-weight: 700; }
+.note { position: absolute; left: 60px; right: 60px; display: flex; gap: 16px; align-items: baseline; border-top: 1px dashed #2c4a74; padding-top: 12px; font-size: 18px; line-height: 1.55; color: #c4d2e6; }
+.note .k { font: 700 12px var(--f-mono); color: var(--cy); letter-spacing: .12em; flex: none; }
+ul.li { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+ul.li li { position: relative; padding-left: 18px; font-size: 17px; line-height: 1.5; color: #d3deee; }
+ul.li li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 7px; border-radius: 1px; background: var(--cy); box-shadow: 0 0 6px var(--cy); }
+ul.li.w li::before { background: var(--warn); box-shadow: 0 0 6px var(--warn); }
+.chip { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid currentColor; }
+.bar { height: 10px; border-radius: 5px; background: #1a2c49; position: relative; overflow: hidden; }
+.bar > i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: linear-gradient(90deg, var(--cy2), var(--cy)); box-shadow: 0 0 10px rgba(79,209,232,.5); }
+
+/* 상시 겹 · 진행 바, 꼬리말, 자막 */
+#hud { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+#prog { position: absolute; left: 0; right: 0; top: 0; height: 5px; display: flex; gap: 3px; pointer-events: auto; }
+#prog .seg { position: relative; height: 100%; background: rgba(79,209,232,.12); cursor: pointer; }
+#prog .seg i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--cy); box-shadow: 0 0 8px var(--cy); transition: width .5s ease; }
+#ft { position: absolute; left: 60px; right: 60px; bottom: 18px; display: flex; justify-content: space-between; font: 500 13px var(--f-mono); color: var(--dim); }
+#ft .c { color: var(--mu2); }
+#sub { position: absolute; left: 140px; right: 140px; bottom: 50px; display: flex; justify-content: center; }
+#sub span { display: inline-block; max-width: 1000px; text-align: center; font-size: 25px; font-weight: 500; line-height: 1.45; color: #fff;
+  background: rgba(3, 8, 16, .82); border: 1px solid rgba(79,209,232,.25); padding: 8px 20px; border-radius: 6px; text-wrap: balance; word-break: keep-all;
+  animation: subIn .35s ease both; }
+@keyframes subIn { from { opacity: 0; transform: translateY(8px); } }
+
+/* 장면 전환 */
+.slide.enter { animation: enter .6s cubic-bezier(.2,.7,.2,1) both; }
+.slide.leave { animation: leave .45s ease both; z-index: 2; }
+@keyframes enter { from { opacity: 0; transform: scale(1.025); filter: blur(6px); } }
+@keyframes leave { to { opacity: 0; transform: scale(.985); filter: blur(4px); } }
+
+/* 효과: .play가 걸린 동안만 돎. 걸리지 않은 상태가 곧 완성된 정지 화면 */
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes growY { from { transform: scaleY(0); } }
+@keyframes draw { from { stroke-dashoffset: var(--len, 2000); } }
+@keyframes ring { from { stroke-dashoffset: var(--c); } }
+@keyframes pulse { 0%,100% { opacity: .35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.6); } }
+@keyframes stamp { 0% { opacity: 0; transform: scale(1.8); } 70% { opacity: 1; transform: scale(.94); } }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); } }
+@keyframes pop { 0% { opacity: 0; transform: scale(.6); } 70% { transform: scale(1.06); } }
+@keyframes tint { from { background: #2a3550; border-color: #3a4a68; } }
+@keyframes sweep { to { transform: rotate(360deg); } }
+@keyframes blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.play .a-rise { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
+.play .a-fade { animation: fade .8s ease both; animation-delay: var(--d, 0s); }
+.play .a-grow { transform-origin: left center; animation: grow 1.1s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
+.play .a-bar { transform-origin: center bottom; animation: growY .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
+.play .a-draw { stroke-dasharray: var(--len, 2000); animation: draw 1.4s ease both; animation-delay: var(--d, 0s); }
+.play .a-ring { animation: ring 1.5s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
+.play .a-stamp { animation: stamp .5s cubic-bezier(.3,1.4,.5,1) both; animation-delay: var(--d, 0s); }
+.play .a-wipe { animation: wipe .9s cubic-bezier(.6,0,.2,1) both; animation-delay: var(--d, 0s); }
+.play .a-pop { animation: pop .55s cubic-bezier(.3,1.3,.5,1) both; animation-delay: var(--d, 0s); }
+.a-pulse { animation: pulse 2.4s ease-in-out infinite; }
+.radar .sw { transform-origin: 110px 110px; animation: sweep 4s linear infinite; }
+.radar .bl { animation: blink 2.2s ease-in-out infinite; animation-delay: var(--d, 0s); }
+/* 켬/끔 스위치 */
+.sw-t { position: relative; width: 52px; height: 26px; border-radius: 13px; border: 1px solid #3a4a68; background: #1b2740; flex: none; }
+.sw-t b { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #6b7b96; }
+.sw-t.on { background: rgba(79,209,232,.22); border-color: var(--cy); }
+.sw-t.on b { left: 29px; background: var(--cy); box-shadow: 0 0 10px var(--cy); }
+.play .sw-t.on { animation: tint .4s ease both; animation-delay: var(--d, 0s); }
+.play .sw-t.on b { animation: knob .4s cubic-bezier(.3,1.3,.5,1) both; animation-delay: var(--d, 0s); --x: -26px; }
+@keyframes knob { from { transform: translateX(-26px); background: #6b7b96; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .play *, .slide.enter, .slide.leave, .a-pulse, .radar .sw, .radar .bl, #sub span { animation: none !important; } }
+
+/* Agent4D 실행 단추 */
+.go { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-decoration: none; color: var(--ink);
+  border-radius: 14px; border: 2px solid var(--cy); background: radial-gradient(ellipse at 50% 30%, rgba(79,209,232,.28), rgba(10,20,36,.9) 70%);
+  box-shadow: 0 0 40px rgba(79,209,232,.25), inset 0 0 30px rgba(79,209,232,.12); transition: transform .2s ease, box-shadow .2s ease; }
+.go:hover { transform: scale(1.02); box-shadow: 0 0 60px rgba(79,209,232,.45), inset 0 0 30px rgba(79,209,232,.2); }
+.go .tri { width: 0; height: 0; border-left: 46px solid var(--cy); border-top: 28px solid transparent; border-bottom: 28px solid transparent; filter: drop-shadow(0 0 12px var(--cy)); margin-left: 12px; }
+</style>
+
+<div class="page">
+  <div id="deck">
+    <div id="stage" aria-live="polite"><div id="canvas"><div id="layer"></div>
+      <div id="hud"><div id="prog"></div><div id="sub" hidden></div><div id="ft"><span>AURI · ALRIS 최종연구심의회 · 2026. 11. 11.</span><span class="c" id="ftc"></span><span id="ftn"></span></div></div>
+    </div></div>
+  </div>
+  <div class="ctl" role="toolbar" aria-label="발표 조작">
+    <button id="bPrev" type="button" aria-label="이전 장면">← 이전</button>
+    <span class="pos" id="pos"></span>
+    <button id="bNext" type="button" aria-label="다음 장면">다음 →</button>
+    <button id="bAuto" type="button" aria-pressed="false">▶ 자동 재생(해설 자막)</button>
+    <button id="bReplay" type="button">효과 다시 보기</button>
+    <button id="bFull" type="button">전체 화면</button>
+    <span class="hint">← → 넘기기 · A 자동 재생 · R 효과 · F 전체 화면</span>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   수치는 모두 보고서 v13(2026. 11. 8. 배포판)과 수치 원장 H에서 가져왔다.
+   쪽번호는 v13 인쇄 쪽(172쪽, 장 시작 1·13·63·101·123)
+   ════════════════════════════════════════════════════════════ */
+const AGENT4D = { url: "https://cc-session-viz.auri-llm-dev-account.workers.dev/?t=sh_lvZXzoN05POSlpztGKpYnpcPrgyPquk9hwrJ24vioGw", until: "2026. 11. 15.(일) 14:44" };
+const CH = ["조치결과", "Ⅰ 배경과 목적", "Ⅱ 국내외 사례", "Ⅲ 고도화와 확장", "Ⅳ 성능 평가", "Ⅴ 정책 제안과 남은 과제"];
+const d = (s) => `data-d="${(+s).toFixed(2)}"`;
+const fmt = (n) => n.toLocaleString("ko-KR");
+function hd(s, title) {
+  return `<div class="hd"><span class="dot a-pulse"></span><div><div class="eb">${s.eb || CH[s.ch]}</div><div class="t a-rise" ${d(.05)}>${title}</div></div><span class="ref">${s.ref ? "보고서 " + s.ref : ""}</span></div>`;
+}
+function ringG(v, goal, col, R, sw, delay) {
+  const C = 2 * Math.PI * R, off = C * (1 - Math.min(v, 100) / 100), sz = (R + sw) * 2, c = R + sw;
+  let g = "";
+  if (goal != null) { const a = (goal / 100) * 360 - 90; g = `<circle cx="${(c + Math.cos(a * Math.PI / 180) * R).toFixed(1)}" cy="${(c + Math.sin(a * Math.PI / 180) * R).toFixed(1)}" r="${sw * .45}" fill="#0a1424" stroke="#e6eef8" stroke-width="3"/>`; }
+  return `<svg width="${sz}" height="${sz}" style="display:block"><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="#1d2f4d" stroke-width="${sw}"/>
+    <circle class="a-ring" ${d(delay)} style="--c:${C.toFixed(1)};filter:drop-shadow(0 0 6px ${col})" cx="${c}" cy="${c}" r="${R}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 ${c} ${c})"/>${g}</svg>`;
+}
+function chCard(no, title, items) {
+  return () => `<div class="slide ch">
+    <div class="mono a-fade" ${d(.05)} style="position:absolute;left:120px;top:196px;font-size:18px;letter-spacing:.3em;color:var(--cy)">CHAPTER ${no}</div>
+    <div class="a-wipe" ${d(.2)} style="position:absolute;left:116px;top:232px;font-size:64px;font-weight:900;letter-spacing:-.02em;line-height:1.2;white-space:nowrap">${title}</div>
+    <div class="a-grow" ${d(.6)} style="position:absolute;left:120px;top:342px;width:220px;height:3px;background:var(--cy);box-shadow:0 0 12px var(--cy)"></div>
+    <div style="position:absolute;left:120px;top:372px;display:flex;flex-direction:column;gap:10px">${items.map((t, i) => `<div class="a-rise" ${d(.8 + i * .12)} style="font-size:22px;color:var(--mu)"><span class="mono cy" style="font-size:15px;margin-right:14px">${String(i + 1).padStart(2, "0")}</span>${t}</div>`).join("")}</div>
+    <div class="mono a-fade" ${d(.3)} style="position:absolute;right:110px;top:150px;font-size:300px;font-weight:700;color:rgba(79,209,232,.07);line-height:1">${["", "I", "II", "III", "IV", "V"][no]}</div>
+  </div>`;
+}
+
+/* ════════════ 장면 ════════════ */
+const S = [];
+const add = (o) => S.push(o);
+
+/* 01 표지 */
+add({ ch: 0, eb: "FINAL REVIEW", sub: [
+  "건축공간연구원 2026년 연구개발적립금 자체연구사업의 최종연구심의회 발표입니다.",
+  "과제명은 「인공지능 건축법령 시스템의 검색기능 고도화 및 데이터 커버리지 확장 방안 연구」입니다.",
+  "오른쪽 계기판은 공개 시범 서비스 ALRIS의 운영 실적입니다. 연구기간 답변 16,982건, 9~10월 가용률 97.74%입니다."],
+  html: () => {
+  const R = 74, mon = [["6월", 3644], ["7월", 3975], ["8월", 2893], ["9월", 2538], ["10월", 3932]], mx = 3975;
+  const bars = mon.map((m, i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px">
+    <span class="mono num" style="font-size:15px;color:#c4d2e6">${fmt(m[1])}</span>
+    <div class="a-bar" ${d(.8 + i * .08)} style="width:100%;height:${Math.round(m[1] / mx * 62)}px;background:linear-gradient(var(--cy),var(--cy2));border-radius:3px 3px 0 0;box-shadow:0 0 12px rgba(79,209,232,.35)"></div>
+    <span style="font-size:15px;color:#8aa0c2">${m[0]}</span></div>`).join("");
+  const days = Array.from({ length: 30 }, (_, i) => `<span class="a-pop" ${d(1.1 + i * .025)} style="flex:1;height:15px;border-radius:2px;background:var(--cy);box-shadow:0 0 6px rgba(79,209,232,.5)"></span>`).join("");
+  return `<div class="slide">
+  <div class="mono a-fade" ${d(.05)} style="position:absolute;left:72px;top:70px;display:flex;align-items:center;gap:12px;color:var(--cy);font-size:16px;letter-spacing:.14em"><span class="a-pulse" style="width:10px;height:10px;border-radius:50%;background:var(--cy);box-shadow:0 0 12px var(--cy)"></span>ALRIS · FINAL REVIEW 2026</div>
+  <div class="a-rise" ${d(.15)} style="position:absolute;left:72px;top:112px;font-size:40px;font-weight:700;line-height:1.32;white-space:nowrap;letter-spacing:-.01em">인공지능 건축법령 시스템의<br>검색기능 고도화 및<br><span class="cy glow">데이터 커버리지</span> 확장 방안 연구</div>
+  <div class="a-rise" ${d(.3)} style="position:absolute;left:72px;top:290px;font-size:19px;color:var(--mu)">2026년 연구개발적립금 자체연구사업</div>
+  <div class="a-rise" ${d(.4)} style="position:absolute;left:72px;top:338px;width:560px">
+    <div style="display:inline-block;border:1px solid var(--cy);color:var(--cy);font-weight:700;font-size:20px;padding:5px 16px;border-radius:4px">최종연구심의회</div>
+    <div style="margin-top:14px;font-size:22px;font-weight:700">2026. 11. 11.(수) 10:00</div>
+    <div style="margin-top:2px;font-size:18px;color:var(--mu)">건축공간연구원 8층 대회의실 · Zoom 화상 병행</div></div>
+  <div class="a-rise" ${d(.5)} style="position:absolute;left:72px;top:494px;width:560px;border-top:1px solid var(--line);padding-top:16px;display:grid;grid-template-columns:96px 1fr;row-gap:8px;font-size:18px">
+    <span class="mu2">연구책임</span><span><b>조상규</b> 선임연구위원</span>
+    <span class="mu2">연구진</span><span>권오규 · 김신성 부연구위원</span>
+    <span class="mu2">서비스</span><span><b class="cy">ALRIS</b> 공개 (시범) 서비스 · <span class="mono" style="font-size:16px">alris.auri.re.kr</span></span></div>
+  <div class="pn a-fade" ${d(.2)} style="left:676px;top:60px;width:540px;height:586px;padding:20px 24px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="h3">운영 지표</span><span class="mono mu2" style="font-size:13px">보고서 [표 4-13]·[표 4-14]</span></div>
+    <div style="display:grid;grid-template-columns:188px 1fr;gap:20px;margin-top:14px;align-items:center">
+      <div style="position:relative;width:188px;height:188px">${ringG(97.74, null, "#4fd1e8", R, 14, .4)}
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span style="font-size:16px;color:var(--mu)">가용률</span>
+          <span style="white-space:nowrap"><span class="mono num cy glow" style="font-size:36px;font-weight:700" data-count="97.74">97.74</span><span class="cy" style="font-size:19px">%</span></span>
+          <span style="font-size:14px;color:#8aa0c2">9~10월 · 61일</span></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px;line-height:1.25">
+        <div style="border-left:3px solid var(--cy);padding:2px 0 2px 14px"><div style="font-size:17px;color:var(--mu)">연구기간 답변</div><div style="white-space:nowrap"><span class="mono num" style="font-size:38px;font-weight:700" data-count="16982">16,982</span><span class="cy" style="font-size:19px;margin-left:4px">건</span></div><div class="mu2" style="font-size:14px">2026. 6. 1.~10. 31.</div></div>
+        <div style="border-left:3px solid #2c5a8a;padding:2px 0 2px 14px"><div style="font-size:17px;color:var(--mu)">누적 답변</div><div style="white-space:nowrap"><span class="mono num" style="font-size:38px;font-weight:700" data-count="38448">38,448</span><span class="cy" style="font-size:19px;margin-left:4px">건</span></div><div class="mu2" style="font-size:14px">2025. 11. 17. 기록 개시 이후</div></div></div></div>
+    <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px">
+      <div style="font-size:17px;color:var(--mu)">월별 ALRIS 답변 (건)</div>
+      <div style="display:flex;gap:22px;height:122px;margin-top:8px">${bars}</div></div>
+    <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:17px;color:var(--mu)">법령 개정 일일 반영 <span class="mu2" style="font-size:14px">9. 29.~10. 28.</span></span><span><span class="mono num cy" style="font-size:25px;font-weight:700">30 / 30</span><span style="font-size:17px;color:var(--mu);margin-left:4px">일</span></span></div>
+      <div style="display:flex;gap:4px;margin-top:10px">${days}</div></div>
+  </div></div>`; } });
+
+/* 02 발표 순서 */
+add({ ch: 0, eb: "CONTENTS", title: "발표 순서", sub: [
+  "중간연구심의회 의견의 조치결과를 먼저 한 장으로 보고드립니다.",
+  "이어서 배경과 목적, 국내외 사례, 검색기능 고도화와 데이터 확장의 결과, 성능 평가, 정책 제안과 남은 과제 순으로 진행합니다."],
+  html: (s) => {
+  const it = [["–", "중간연구심의회 지적사항 조치결과", "20건(26행) · 반영 10 · 부분 반영 9 · 남은 기간 조치 2 · 해당 없음 5", "별지"],
+    ["Ⅰ", "연구의 배경과 목적", "AI 법령 서비스의 보급과 실무 확산의 조건 · 근거 · 시점 · 지역", "1장 2–6쪽"],
+    ["Ⅱ", "국내외 사례와 시사점", "추진 주체와 AI 역할 범위 · 시사점과 이후 장의 대응", "2장 58–62쪽"],
+    ["Ⅲ", "검색기능 고도화와 데이터 커버리지 확장", "감사 · 시점 · 근거 · 지역 · 운영 반영 · 화면 · AI 관리 체계 · 작업 리플레이", "3장 64–100쪽"],
+    ["Ⅳ", "성능 평가", "평가 체계 · 목표 대비 결과 · 1차 목표와 시범 운영", "4장 102–121쪽"],
+    ["Ⅴ", "정책 제안과 남은 과제", "정책 제안 여덟 가지 · 로드맵 · 한계와 남은 기간 · 후속 과제", "5장 127–138쪽"]];
+  return `<div class="slide">${hd(s, "발표 순서")}
+  <svg style="position:absolute;left:96px;top:128px" width="20" height="470"><path class="a-draw" ${d(.2)} style="--len:470" d="M10 10 V460" stroke="#2c5a8a" stroke-width="2"/></svg>
+  <div style="position:absolute;left:84px;right:80px;top:120px;display:flex;flex-direction:column;gap:12px">
+  ${it.map((r, i) => `<div class="a-rise" ${d(.25 + i * .14)} style="display:grid;grid-template-columns:44px 1fr auto;gap:26px;align-items:center;height:68px">
+    <div class="mono" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;${i ? "background:rgba(79,209,232,.14);border:1.5px solid var(--cy);color:var(--cy);box-shadow:0 0 14px rgba(79,209,232,.35)" : "background:#18263d;border:1.5px solid #3a4a68;color:var(--mu)"}">${r[0]}</div>
+    <div><div style="font-size:23px;font-weight:700">${r[1]}</div><div style="font-size:16px;color:var(--mu);margin-top:3px">${r[2]}</div></div>
+    <div class="mono" style="font-size:15px;color:var(--mu2);text-align:right">${r[3]}</div></div>`).join("")}</div></div>`; } });
+
+/* 03 조치결과 */
+add({ ch: 0, ref: "별지(배포 자료 2~6쪽)", sub: [
+  "중간 심의의견 20건을 26행으로 나누어 조치했습니다.",
+  "반영 10, 부분 반영 9, 남은 기간 조치 2, 해당 없음 5입니다.",
+  "부분 반영에 공통으로 남은 일은 1,205문항 확증 측정과 정답 일치율 판정 기준의 확정입니다.",
+  "지자체 공무원 패널과 부처 공식 협의는 연구기간에 실적이 없어 남은 기간에 수행합니다."],
+  html: (s) => {
+  const seg = [[10, "반영", "#4fd1e8"], [9, "부분 반영", "#f4b740"], [2, "남은 기간 조치", "#ff7a66"], [5, "해당 없음", "#5f7393"]];
+  const R = 92, C = 2 * Math.PI * R; let acc = 0;
+  const arcs = seg.map((g, i) => { const len = C * g[0] / 26, o = `<circle class="a-ring" ${d(.3 + i * .25)} style="--c:${(len).toFixed(1)}" cx="120" cy="120" r="${R}" fill="none" stroke="${g[2]}" stroke-width="26" stroke-dasharray="${(len - 3).toFixed(1)} ${(C - len + 3).toFixed(1)}" stroke-dashoffset="${(-acc).toFixed(1)}" transform="rotate(-90 120 120)" style="filter:drop-shadow(0 0 5px ${g[2]})"/>`; acc += len; return o; }).join("");
+  const done = [["17", "「범용 법령검색의 국가 기준선」을 「AI 법령 서비스의 보급이 활성화되고 있다」로 완화하고 근거 제시"],
+    ["3-3 · 19", "자치법규 명칭 163,253건 · 관할 260곳, 광역–기초 위임관계 반영"],
+    ["7", "판정 모델 변동(13.1~15.7점) · 판정 기준 교체 조건 제시, 지표 정의 선행 공표 · 재측정 원칙 제안"],
+    ["8 · 9 · 10", "서론 배경 보강과 연구 흐름도, 2장 분석 틀과 이후 장 대응표"],
+    ["13", "「법령 개정 반영 체계」 신설 — 최근 30일 일일 갱신 30/30일"],
+    ["20-3", "같은 판정기로 다시 잰 베이스라인과만 비교"]];
+  return `<div class="slide">${hd(s, "심의의견 20건(26행)의 조치결과")}
+  <div class="pn a-fade" ${d(.1)} style="left:60px;top:124px;width:330px;height:430px;padding:20px">
+    <div style="position:relative;width:240px;height:240px;margin:6px auto 0"><svg width="240" height="240"><circle cx="120" cy="120" r="${R}" fill="none" stroke="#1d2f4d" stroke-width="26"/>${arcs}</svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono num glow" style="font-size:52px;font-weight:700" data-count="26">26</span><span class="mu" style="font-size:16px">행</span></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:20px">${seg.map((g, i) => `<div class="a-rise" ${d(.5 + i * .1)} style="display:flex;align-items:baseline;gap:8px"><span class="mono num" style="font-size:30px;font-weight:700;color:${g[2]}">${g[0]}</span><span style="font-size:15px;color:var(--mu)">${g[1]}</span></div>`).join("")}</div></div>
+  <div style="position:absolute;left:420px;top:124px;width:440px">
+    <div class="lab">주요 조치</div>
+    <div style="display:flex;flex-direction:column;gap:11px;margin-top:12px">${done.map((r, i) => `<div class="a-rise" ${d(.5 + i * .1)} style="display:grid;grid-template-columns:78px 1fr;gap:10px;font-size:16px;line-height:1.45"><span class="mono cy" style="font-size:13px;padding-top:3px">${r[0]}</span><span>${r[1]}</span></div>`).join("")}</div></div>
+  <div class="pn a-rise" ${d(.8)} style="left:884px;top:124px;width:336px;height:236px;padding:16px 18px;border-color:rgba(244,183,64,.4)">
+    <div class="lab" style="color:var(--warn)">부분 반영 · 남은 일</div>
+    <ul class="li w" style="margin-top:10px;gap:7px">${["확증 측정(1,205문항) · 정답 일치율 정본 판정 기준 확정", "연혁 · 조례 연동의 정답 일치율 효과 가려내기", "시험 설정 기능의 운영 반영 판단", "추가 자문 회차 · 조례 시나리오 문항"].map((t) => `<li style="font-size:15px">${t}</li>`).join("")}</ul></div>
+  <div class="pn a-rise" ${d(.95)} style="left:884px;top:374px;width:336px;height:180px;padding:16px 18px;border-color:rgba(255,122,102,.4)">
+    <div class="lab" style="color:var(--bad)">남은 기간 조치</div>
+    <ul class="li" style="margin-top:10px;gap:7px"><li style="font-size:15px">3-4 지자체 건축행정 담당자 패널(도 지역 포함)</li><li style="font-size:15px">3-5 국토교통부 · 법제처 업무협의 — 7. 23. 공감 협의회 주제발표는 소개에 그침</li></ul></div>
+  <div class="note" style="top:578px"><span class="k">NOTE</span><span>행별 조치 내용은 배포 자료의 별지(2~6쪽)에 있습니다</span></div>
+  </div>`; } });
+
+/* Ⅰ */
+add({ ch: 1, chap: true, dur: 4.5, sub: ["첫째, 연구의 배경과 목적입니다."], html: chCard(1, "연구의 배경과 목적", ["AI 법령 서비스의 보급과 실무 확산의 조건", "근거 · 시점 · 지역과 세 가지 연구 목적"]) });
+
+/* 04 배경 */
+add({ ch: 1, ref: "1장 1절 1) 2–5쪽", sub: [
+  "3개년 선행연구로 가능성, 서비스화, 답변 품질을 차례로 확인했습니다.",
+  "2026년에는 AI 기본법이 시행되고, 법제처의 생성형 AI 법령검색 구축과 인허가 사전진단 서비스가 움직이기 시작했습니다.",
+  "법률 AI 서비스는 빠르게 보급되고 있습니다. 다만 행정 실무에서 쓰이려면 답의 근거와 시점과 지역을 확인할 수 있어야 하고, 그 정확도가 측정되어 공개되어야 합니다.",
+  "2025년 법령 검색 성공률은 61~63%였고, 종전 시스템은 과거 판이나 조례가 필요한 질의에도 현행 상위 법령으로 답하면서 실패를 알리지 않았습니다."],
+  html: (s) => {
+  const yrs = [["2023", "언어모델의 건축법령 질의 응답 가능성 확인"], ["2024", "공개 시범 서비스로 제공"], ["2025", "답변 품질의 향상"]];
+  const chg = [["AI 기본법 시행", "2026. 1. 22.", "투명성 의무 · 고영향 AI의 위험관리와 사람의 관리 · 감독"],
+    ["법제처 AI 법령검색", "2024. 12. → 2027. 7.", "지능형 법령검색 개통, 생성형 AI 법령검색 구축 착수(2026. 6.) · 개통 목표"],
+    ["AI 인허가 사전진단", "2027. 1. 시범운영", "과기정통부 · 국토교통부, 토지개발 인허가 가능 여부 사전 진단"]];
+  return `<div class="slide">${hd(s, "AI 법령 서비스의 보급과 실무 확산의 조건")}
+  <div class="lab a-fade" ${d(.1)} style="position:absolute;left:60px;top:124px">3개년 선행연구</div>
+  <svg style="position:absolute;left:60px;top:166px" width="500" height="20"><path class="a-draw" ${d(.2)} style="--len:500" d="M10 10 H490" stroke="#2c5a8a" stroke-width="2"/></svg>
+  <div style="position:absolute;left:60px;top:156px;width:500px;display:grid;grid-template-columns:repeat(3,1fr)">${yrs.map((y, i) => `<div class="a-rise" ${d(.3 + i * .15)}>
+    <span style="display:block;width:16px;height:16px;border-radius:50%;margin:3px 0 0 2px;background:var(--bg0);border:2px solid var(--cy);box-shadow:0 0 10px var(--cy)"></span>
+    <div class="mono" style="font-size:26px;font-weight:700;margin-top:12px">${y[0]}</div><div style="font-size:16px;color:var(--mu);margin-top:6px;line-height:1.45;padding-right:18px">${y[1]}</div></div>`).join("")}</div>
+  <div class="pn a-rise" ${d(.5)} style="left:60px;top:340px;width:500px;height:150px;padding:18px 22px">
+    <div style="font-size:16px;color:var(--mu)">2025년 벤치마크 법령 검색 성공률(법령명 단위)</div>
+    <div style="display:flex;align-items:baseline;gap:14px;margin-top:4px"><span class="mono num warn" style="font-size:46px;font-weight:700">61~63</span><span class="warn" style="font-size:20px">%</span></div>
+    <div style="font-size:16px;color:#c4d2e6">과거 판 · 조례가 필요한 질의에도 현행 상위 법령으로 답하고 <b class="bad">실패를 보고하지 않음</b></div></div>
+  <div class="lab a-fade" ${d(.4)} style="position:absolute;left:610px;top:124px">2026년 세 가지 변화</div>
+  <div style="position:absolute;left:610px;right:60px;top:156px;display:flex;flex-direction:column;gap:12px">${chg.map((c, i) => `<div class="pn a-rise" ${d(.55 + i * .15)} style="position:relative;padding:14px 20px;display:grid;grid-template-columns:1fr auto;gap:2px 12px">
+    <span style="font-size:20px;font-weight:700">${c[0]}</span><span class="mono cy" style="font-size:14px;align-self:center">${c[1]}</span><span style="grid-column:1/-1;font-size:15px;color:var(--mu)">${c[2]}</span></div>`).join("")}</div>
+  <div class="a-wipe" ${d(1.2)} style="position:absolute;left:60px;right:60px;top:516px;font-size:24px;font-weight:700;line-height:1.5;border-left:4px solid var(--cy);padding:6px 0 6px 22px;background:linear-gradient(90deg,rgba(79,209,232,.12),transparent 70%)">
+    보급은 빠르다. 실무에서 쓰이려면 <span class="cy">답의 근거 · 시점 · 지역을 확인</span>할 수 있고 <span class="cy">정확도가 측정 · 공개</span>되어야 한다</div>
+  </div>`; } });
+
+/* 05 목적 */
+add({ ch: 1, ref: "1장 1절 2) 5–6쪽", sub: [
+  "건축 인허가 실무에서 법령을 찾는 일은 이 사안에 언제, 어디서, 무엇을 근거로 적용되는 규범인지 확정하는 일입니다.",
+  "이를 근거, 시점, 지역으로 정리하고 하이브리드 검색, 조문 연혁과 시점별 검색, 조례 온디맨드 참조라는 세 연구 목적에 대응시켰습니다."],
+  html: (s) => {
+  const ax = [["근거", "무엇을 근거로 답했는가", "하이브리드 검색 체계의 최적화", "과제 1", "EVIDENCE"], ["시점", "언제의 규범인가", "조문 연혁 분석과 시점별 법령 검색", "과제 2", "TIME"], ["지역", "어디에 적용되는 규범인가", "지방자치단체 조례의 온디맨드 참조", "과제 3", "REGION"]];
+  return `<div class="slide">${hd(s, "근거 · 시점 · 지역과 세 가지 연구 목적")}
+  <svg style="position:absolute;left:52px;top:118px;overflow:visible" width="400" height="390">
+    <defs><marker id="ar5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4fd1e8"/></marker></defs>
+    <g stroke="#4fd1e8" stroke-width="2.4" fill="none" style="filter:drop-shadow(0 0 4px #4fd1e8)">
+      <path class="a-draw" ${d(.3)} style="--len:320" d="M60 320 H344" marker-end="url(#ar5)"/>
+      <path class="a-draw" ${d(.4)} style="--len:300" d="M60 320 V48" marker-end="url(#ar5)"/>
+      <path class="a-draw" ${d(.5)} style="--len:220" d="M60 320 L230 206" marker-end="url(#ar5)"/></g>
+    <g class="a-fade" ${d(1.0)} stroke="#7f93b3" stroke-width="1.3" stroke-dasharray="5 5" fill="none"><path d="M300 110 V240 M300 240 L190 320 M300 240 H160 M300 110 H160 M160 110 L60 178 M160 110 V240"/></g>
+    <g class="a-stamp" ${d(1.3)}><circle cx="300" cy="110" r="22" fill="none" stroke="#4fd1e8" stroke-width="2"/><circle cx="300" cy="110" r="9" fill="#4fd1e8" style="filter:drop-shadow(0 0 8px #4fd1e8)"/></g>
+    <text x="60" y="30" text-anchor="middle" font-size="22" font-weight="700" fill="#e6eef8">근거</text>
+    <text x="352" y="328" font-size="22" font-weight="700" fill="#e6eef8">시점</text>
+    <text x="240" y="200" font-size="22" font-weight="700" fill="#e6eef8">지역</text>
+    <text x="300" y="56" text-anchor="middle" font-size="15" fill="#9fb3d1">이 사안에</text><text x="300" y="78" text-anchor="middle" font-size="17" font-weight="700" fill="#4fd1e8">적용되는 규범</text>
+    <text x="10" y="378" font-size="19" fill="#c4d2e6"><tspan font-weight="700" fill="#e6eef8">언제 · 어디서 · 무엇을 근거로</tspan> 적용되는가</text></svg>
+  <div style="position:absolute;left:480px;right:60px;top:126px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">${ax.map((a, i) => `<div class="pn a-rise" ${d(.5 + i * .15)} style="position:relative;padding:20px 20px;height:370px;display:flex;flex-direction:column">
+    <div class="lab">${a[4]}</div><div style="font-size:42px;font-weight:900;margin-top:6px" class="glow">${a[0]}</div>
+    <div class="cy" style="font-size:18px;font-weight:700;margin-top:10px;min-height:50px">${a[1]}</div>
+    <div style="height:1px;background:var(--line);margin:14px 0"></div>
+    <div style="font-size:18px;line-height:1.5">${a[2]}</div>
+    <div style="margin-top:auto"><span class="chip cy">${a[3]}</span></div></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1.4)} style="top:524px"><span class="k">NOTE</span><span>법률 AI 서비스의 확산에 부족한 점 — 답이 <b class="cy">언제 · 어디의 규범</b>에 근거했고 <b class="cy">무엇을 근거로</b> 삼았는지 확인할 수 있고, 그 정확도가 측정 · 공개될 것</span></div>
+  </div>`; } });
+
+/* Ⅱ */
+add({ ch: 2, chap: true, dur: 4.5, sub: ["둘째, 국내외 사례와 시사점입니다."], html: chCard(2, "국내외 사례와 시사점", ["추진 주체와 AI 역할 범위로 본 사례", "종합 시사점과 이 연구의 대응"]) });
+
+/* 06 사례 */
+add({ ch: 2, ref: "2장 4절 1) 58–60쪽", sub: [
+  "국내외 사례를 추진 주체와 AI가 맡는 역할의 범위로 나누었습니다.",
+  "조사한 범위에서 심사에 편입된 자동판정은 모두 규칙기반이었고, 생성형 AI는 사전검토와 초안 작성 단계까지였습니다. 재량 판단은 사람에게 남았습니다.",
+  "ALRIS는 정보 안내와 검색 단계에 있고, 근거·시점·지역의 고도화는 그다음 단계로 가기 위한 전제입니다."],
+  html: (s) => {
+  const st = ["⓪ 데이터<br>기반 조성", "① 정보 안내<br>· 검색", "② 형식 · 기재<br>사항 점검", "③ 사전검토<br>· 초안 작성", "④ 심사 편입<br>자동판정"];
+  const rows = [["국가 주도 · 의무화", ["독일 XBau · 영국 legislation.gov.uk · EU ELI", "", "싱가포르 CORENET X", "홍콩 BIM 자동검사", "에스토니아 EHR"]],
+    ["국가 개발 · 공급<br><span style='font-size:13px;color:var(--mu2)'>의무화 없음</span>", ["영국 Extract", "독일 NeuRIS · 싱가포르 Pair Search · 중국 法信 등", "일본 건축확인 사전체크", "영국 APD · 캘리포니아 Archistar", ""]],
+    ["지방정부 조달<br>· 자체 구축", ["", "마이애미 Codebot", "", "시애틀 CivCheck(실증) 등", "베이커스필드 Symbium"]],
+    ["민간 상용<br>· 개별 채택", ["미국 민간 코디파이어", "Harvey · LexisNexis · Noxtua 등", "", "네덜란드 Struck 등", ""]]];
+  const cw = 184, x0 = 230;
+  return `<div class="slide">${hd(s, "추진 주체와 AI 역할 범위로 본 국내외 사례")}
+  <div style="position:absolute;left:${x0}px;top:120px;display:flex;gap:6px">${st.map((t, i) => `<div class="a-rise" ${d(.1 + i * .08)} style="width:${cw - 6}px;height:58px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:15px;font-weight:700;line-height:1.3;border-radius:6px;background:${i === 4 ? "#2a1d2a" : "#13284a"};border:1px solid ${i === 4 ? "#6b3a44" : "#2c4a74"}">${t}</div>`).join("")}</div>
+  <div style="position:absolute;left:${x0 + cw - 3}px;top:112px;width:${cw}px;height:440px;border:2px solid var(--cy);border-radius:8px;box-shadow:0 0 22px rgba(79,209,232,.35)" class="a-fade" ${d(1.5)}></div>
+  ${rows.map((r, ri) => `<div style="position:absolute;left:60px;top:${188 + ri * 86}px;display:flex;gap:6px;align-items:stretch">
+    <div class="a-fade" ${d(.3 + ri * .1)} style="width:164px;height:80px;display:flex;flex-direction:column;justify-content:center;font-size:15px;font-weight:700;line-height:1.35;color:var(--mu)"><div>${r[0]}</div></div>
+    ${r[1].map((c, i) => `<div class="${c ? "a-pop" : ""}" ${d(.5 + ri * .12 + i * .06)} style="width:${cw - 6}px;height:80px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 8px;font-size:13.5px;line-height:1.35;border-radius:6px;${c ? "background:var(--panel2);border:1px solid #2c4a74" : "border:1px dashed #1d3150;color:var(--dim)"}">${c || "—"}</div>`).join("")}</div>`).join("")}
+  <div class="a-stamp" ${d(1.7)} style="position:absolute;left:${x0 + cw + 16}px;top:536px;background:var(--cy);color:#06121f;font-weight:900;font-size:15px;padding:4px 14px;border-radius:4px">ALRIS의 위치</div>
+  <div class="note a-fade" ${d(1.9)} style="top:578px"><span class="k">FINDING</span><span>④는 모두 규칙기반 판정 · 생성형 AI는 ③ 이하 · 재량 판단은 사람의 심사 — 사례들은 답할 범위를 넓히기보다 <b class="cy">범위를 밝히는 방식</b>으로 신뢰를 얻으려 했다</span></div>
+  </div>`; } });
+
+/* 07 시사점 */
+add({ ch: 2, ref: "2장 4절 4) 61–62쪽", sub: [
+  "사례에서 얻은 시사점은 이후 장의 과제와 정책 제안으로 이어집니다.",
+  "근거·시점·지역의 시사점은 3장과 4장의 개선과 측정으로, 자동화 범위와 데이터 인프라, 모델 전환은 5장의 정책 제안으로 연결했습니다.",
+  "에이전트 구조에 관한 시사점은 자율성의 확대보다 통제 지점을 밝히는 쪽으로, 3장 5절의 에이전트 툴킷에서 다룹니다."],
+  html: (s) => {
+  const R = [["근거", "자체 평가셋과 지표 정의를 먼저 갖추어야 성능 주장을 검증할 수 있음", "성과지표의 조작적 정의, 평가셋 구성, 판정 모델 병기", "4장 1절"],
+    ["근거", "답변 근거를 원문으로 제시하고 담당자가 대조할 수 있어야 함", "조문 단위 근거 검색과 인용 대조", "3장 3절 · 4장 2절"],
+    ["시점", "시점 검색의 관건은 적재보다 갱신 주기와 시행 시점 지정", "연혁 데이터 재설계와 시점별 검색", "3장 2절 · 4장 3절"],
+    ["지역", "조례 확보 건수보다 식별자와 상하위 규정 관계가 먼저", "자치법규 온디맨드 참조, 위임관계 반영", "3장 4절 · 4장 3절"],
+    ["자동화 범위", "판정 가능한 범위를 목록으로 공개하고 단계적으로 넓힘", "판정하지 않는 안내 · 검색 서비스로 위치, 판정 가능 범위 공개 제안", "5장"],
+    ["데이터 인프라", "데이터 정비가 활용 서비스에 앞서고 민관이 분업함", "원천 데이터 정합성 감사, 데이터 인프라 선행 정비 제안", "3장 2절 · 5장"],
+    ["모델 전환", "모델을 바꾸어도 같은 조건으로 다시 재어 비교할 수 있어야 함", "모델 교체 시 같은 조건 재측정 원칙", "4장 1절 · 5장"],
+    ["에이전트 구조", "자율성의 확대보다 통제 지점의 명시와 반복 일관성", "코드 기반 오케스트레이터와 에이전트 툴킷", "3장 5절"]];
+  return `<div class="slide">${hd(s, "종합 시사점과 이 연구의 대응")}
+  <div style="position:absolute;left:60px;right:60px;top:118px;display:grid;grid-template-columns:130px 1fr 1fr 150px;font-size:13px;color:var(--mu2)" class="mono a-fade" ${d(.1)}><span>구분</span><span>시사점</span><span>이 연구의 대응</span><span style="text-align:right">다루는 곳</span></div>
+  <div style="position:absolute;left:60px;right:60px;top:142px;display:flex;flex-direction:column">${R.map((r, i) => `<div class="a-rise" ${d(.2 + i * .08)} style="display:grid;grid-template-columns:130px 1fr 1fr 150px;gap:0 18px;align-items:center;min-height:52px;border-bottom:1px solid var(--line);font-size:16px;line-height:1.4;padding:4px 0">
+    <span style="font-weight:700" class="cy">${r[0]}</span><span style="color:#c4d2e6">${r[1]}</span><span>${r[2]}</span><span class="mono mu2" style="font-size:13px;text-align:right">${r[3]}</span></div>`).join("")}</div>
+  </div>`; } });
+
+/* Ⅲ */
+add({ ch: 3, chap: true, dur: 4.5, sub: ["셋째, 검색기능 고도화와 데이터 커버리지 확장의 결과입니다."], html: chCard(3, "검색기능 고도화와 데이터 커버리지 확장", ["기본 방향 · 연혁 자산 감사", "시점 · 근거 · 지역", "운영 반영과 서비스 화면", "AI 에이전트를 활용한 관리 · 개선 체계"]) });
+
+/* 08 기본 방향 */
+add({ ch: 3, ref: "3장 1절 64–65쪽", sub: [
+  "검색 실패에는 두 종류가 있습니다. 근거로 삼을 자료가 시스템 안에 없는 경우와, 자료는 있는데 찾아내지 못하는 경우입니다.",
+  "앞의 것은 시점과 지역을 구분하는 능력, 뒤의 것은 근거를 찾아내는 능력의 문제입니다.",
+  "검증되지 않은 기능은 서비스하지 않고, 적재와 도달을 나누어 재며, 기능을 도구로 분리한다는 세 원칙 아래에서 개선했습니다."],
+  html: (s) => {
+  const pr = [["01", "검증되지 않은 기능은 서비스하지 않는다", "판정 가능한 검증 전에는 운영 기본값에서 켜지 않음"],
+    ["02", "적재와 도달을 구분해서 잰다", "넣은 양(적재)과, 실제 질의에서 인용된 조문을 그 기능으로 조회했을 때 찾아 돌려주는 비율(도달)은 다른 값"],
+    ["03", "기능은 도구로 분리한다", "검색 · 연혁 조회 · 조례 연계를 따로 부르고 따로 검증"]];
+  return `<div class="slide">${hd(s, "검색이 실패하는 두 가지 이유와 설계 원칙")}
+  <div class="pn a-rise" ${d(.2)} style="left:60px;top:122px;width:566px;height:190px;padding:20px 24px;border-color:rgba(255,122,102,.45)">
+    <div class="lab" style="color:var(--bad)">FAILURE 1</div><div class="h3" style="margin-top:6px">근거로 삼을 자료가 시스템 안에 없다</div>
+    <ul class="li w" style="margin-top:12px"><li>과거 시점의 판 · 특정 지자체 조례 → 현행 조문만으로 답함</li><li>더 큰 위험: <b class="bad">못 찾았다는 사실을 모른 채</b> 답한다</li></ul>
+    <div class="mono cy" style="position:absolute;right:22px;top:20px;font-size:14px">→ 구분하는 능력 · 시점 · 지역</div></div>
+  <div class="pn a-rise" ${d(.35)} style="left:654px;top:122px;width:566px;height:190px;padding:20px 24px">
+    <div class="lab">FAILURE 2</div><div class="h3" style="margin-top:6px">자료는 있는데 찾아내지 못한다</div>
+    <ul class="li" style="margin-top:12px"><li>실무 통칭으로 부른 법령을 실제 법령과 잇지 못함</li><li>조문 번호를 짚어야 하는 질의에 뜻이 비슷한 다른 조문</li></ul>
+    <div class="mono cy" style="position:absolute;right:22px;top:20px;font-size:14px">→ 찾아내는 능력 · 근거</div></div>
+  <div class="lab a-fade" ${d(.6)} style="position:absolute;left:60px;top:338px">설계 원칙</div>
+  <div style="position:absolute;left:60px;right:60px;top:366px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">${pr.map((p, i) => `<div class="pn a-rise" ${d(.7 + i * .15)} style="position:relative;padding:18px 20px;height:186px">
+    <div class="mono cy glow" style="font-size:30px;font-weight:700">${p[0]}</div><div style="font-size:19px;font-weight:700;margin-top:6px;line-height:1.35">${p[1]}</div>
+    <div style="font-size:15px;color:var(--mu);margin-top:8px;line-height:1.5">${p[2]}</div></div>`).join("")}</div>
+  </div>`; } });
+
+/* 09 감사 */
+add({ ch: 3, ref: "3장 2절 67–71쪽", sub: [
+  "연구 초기에는 앞서 구축해 둔 연혁 데이터를 쓸 계획이었습니다. 쓰기 전에 정합성을 감사했습니다.",
+  "화면에 표시될 최신 개정일이 원 출처와 일치하는 비율은 표본 50건에서 20.0%, 대조할 수 있는 전량 383건에서 38.1%였습니다.",
+  "조문 기록의 47.7%는 원 출처에 없는 판에 붙어 있었습니다. 그대로 썼다면 다섯 건 중 세 건 이상꼴로 틀린 개정일을 보여 주었을 것입니다.",
+  "이 자산은 폐기하고, 법제처 응답을 그대로 보관하는 원형 층과 소비처별 파생 층으로 새로 지었습니다."],
+  html: (s) => {
+  const g = (v, lab, sub, i) => `<div class="a-rise" ${d(.2 + i * .2)} style="display:flex;flex-direction:column;align-items:center">
+    <div style="position:relative;width:200px;height:200px">${ringG(v, null, "#ff7a66", 84, 16, .4 + i * .2)}
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono num bad" style="font-size:40px;font-weight:700;text-shadow:0 0 14px rgba(255,122,102,.6)" data-count="${v}">${v.toFixed(1)}</span><span class="mu" style="font-size:15px">% 일치</span></div></div>
+    <div style="font-size:18px;font-weight:700;margin-top:10px">${lab}</div><div class="mu" style="font-size:15px">${sub}</div></div>`;
+  return `<div class="slide">${hd(s, "기존 연혁 자산의 정합성 감사 — 폐기하고 새로 지었다")}
+  <div class="lab a-fade" ${d(.1)} style="position:absolute;left:60px;top:124px">화면에 표시될 최신 개정일이 원 출처와 일치하는 비율</div>
+  <div style="position:absolute;left:60px;top:160px;width:520px;display:flex;justify-content:space-around">${g(20.0, "표본 50건", "무작위 표본", 0)}${g(38.1, "전량 383건", "대조할 수 있는 전부", 1)}</div>
+  <div class="pn a-rise" ${d(.8)} style="left:620px;top:124px;width:600px;height:178px;padding:18px 22px">
+    <div style="font-size:17px;color:var(--mu)">원 출처에 없는 판에 붙은 조문 기록</div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:4px"><span class="mono num bad" style="font-size:52px;font-weight:700" data-count="47.7">47.7</span><span class="bad" style="font-size:22px">%</span><span class="mono mu2" style="font-size:16px;margin-left:10px">3,022 / 6,337</span></div>
+    <div class="bar" style="margin-top:12px"><i class="a-grow" ${d(1)} style="width:47.7%;background:linear-gradient(90deg,#6b2a22,#ff7a66);box-shadow:0 0 10px rgba(255,122,102,.5)"></i></div></div>
+  <div class="pn a-rise" ${d(1.1)} style="left:620px;top:318px;width:600px;height:178px;padding:18px 22px">
+    <div class="lab">조치</div>
+    <div style="display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:8px;margin-top:14px">
+      <div style="text-align:center;padding:14px 8px;border:1px dashed #6b3a44;border-radius:8px;color:var(--bad);font-weight:700;font-size:18px;text-decoration:line-through">기존 연혁 자산</div>
+      <svg width="34" height="20"><path class="a-draw" ${d(1.4)} style="--len:40" d="M2 10 H30 M22 3 L30 10 L22 17" stroke="#4fd1e8" stroke-width="2.5" fill="none"/></svg>
+      <div style="display:flex;flex-direction:column;gap:6px"><div class="a-pop" ${d(1.6)} style="padding:8px 12px;border:1px solid var(--cy);border-radius:6px;font-size:16px"><b class="cy">원형 층</b> 법제처 응답을 그대로 보관</div><div class="a-pop" ${d(1.75)} style="padding:8px 12px;border:1px solid #2c5a8a;border-radius:6px;font-size:16px"><b>파생 층</b> 소비처별로 다시 만듦</div></div></div></div>
+  <div class="a-wipe" ${d(1.9)} style="position:absolute;left:60px;right:60px;top:520px;font-size:23px;font-weight:700;border-left:4px solid var(--bad);padding:6px 0 6px 22px;background:linear-gradient(90deg,rgba(255,122,102,.12),transparent 70%)">그대로 썼다면 <span class="bad">다섯 건 중 세 건 이상꼴로 틀린 개정일</span> — 시스템은 조회에 성공했다고 보고하고 화면에는 그럴듯한 날짜가 뜬다</div>
+  </div>`; } });
+
+/* 10 시점 */
+add({ ch: 3, eb: "과제 2 / 3 · 시점", ref: "3장 2절 67–71쪽", sub: [
+  "시점에서는 법령 16만 9천여 판, 행정규칙 15만 1천여 판의 연혁을 갖추었습니다.",
+  "질의의 기준 시점에 시행되던 판의 조문으로 답하는 시점 조회를 운영에 반영했고, 개정 반영은 최근 30일 동안 하루도 빠짐없이 돌았습니다.",
+  "운영 서비스의 시점별 검색 정확도는 74.29입니다. 틀린 9문항은 모두 정답 조문을 냈으나 어느 시점의 판인지 밝히지 않은 경우였습니다."],
+  html: (s) => {
+  const st = [["169604", "169,604", "판", "법령 연혁"], ["151010", "151,010", "판", "행정규칙 연혁"], ["109463", "109,463", "판", "개정이유 연결(9. 26.)"]];
+  const grid = Array.from({ length: 30 }, (_, i) => `<span class="a-pop" ${d(.9 + i * .03)} style="height:24px;border-radius:3px;background:var(--cy);box-shadow:0 0 6px rgba(79,209,232,.5)"></span>`).join("");
+  return `<div class="slide">${hd(s, "질의 기준 시점의 판으로 답하는 조문 단위 시점 조회")}
+  <div style="position:absolute;left:60px;right:60px;top:122px;display:grid;grid-template-columns:repeat(3,1fr) 1.15fr;gap:16px">
+    ${st.map((x, i) => `<div class="pn a-rise" ${d(.15 + i * .12)} style="position:relative;padding:16px 20px;height:128px"><div class="mu" style="font-size:16px">${x[3]}</div><div style="margin-top:8px;white-space:nowrap"><span class="mono num glow" style="font-size:42px;font-weight:700" data-count="${x[0]}">${x[1]}</span><span class="cy" style="font-size:18px;margin-left:4px">${x[2]}</span></div></div>`).join("")}
+    <div class="pn a-rise" ${d(.5)} style="position:relative;padding:16px 20px;height:128px"><div style="display:flex;justify-content:space-between"><span class="mu" style="font-size:16px">개정 일일 반영</span><span class="mono num cy" style="font-size:20px;font-weight:700">30 / 30일</span></div>
+      <div style="display:grid;grid-template-columns:repeat(15,1fr);gap:4px;margin-top:14px">${grid}</div><div class="mono mu2" style="font-size:12px;margin-top:6px">9. 29.~10. 28.</div></div></div>
+  <div class="pn a-rise" ${d(.7)} style="left:60px;top:268px;width:560px;height:266px;padding:18px 22px">
+    <div class="lab">갖춘 것</div>
+    <ul class="li" style="margin-top:12px"><li>시행판 특정 기준을 정하고 연혁 데이터를 감사 · 재설계</li><li>질의의 기준 시점에 시행되던 판의 조문으로 답하는 조회 — <b class="cy">운영 반영</b></li><li>법령 · 행정규칙 · 자치법규 · 건설기준의 개정을 하루 한 번 반영</li></ul>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-top:16px;border-top:1px solid var(--line);padding-top:12px;white-space:nowrap"><span class="mu" style="font-size:15px">일일 갱신 회차</span><span class="mono num mu2" style="font-size:20px;font-weight:700;text-decoration:line-through">9,188초</span><span class="cy">→</span><span class="mono num cy glow" style="font-size:28px;font-weight:700">1,938초</span><span class="mono mu2" style="font-size:12px">9. 24. → 9. 25. 정기</span></div></div>
+  <div class="pn a-rise" ${d(.85)} style="left:640px;top:268px;width:580px;height:266px;padding:18px 22px">
+    <div class="lab">측정으로 본 상태 · 시점별 검색 정확도(T)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">
+      <div><div class="mu" style="font-size:15px">서비스 설정(운영 중)</div><span class="mono num warn" style="font-size:44px;font-weight:700" data-count="74.29">74.29</span><span class="mono mu2" style="font-size:15px;margin-left:6px">26/35</span><div class="bar" style="margin-top:8px"><i class="a-grow" ${d(1.1)} style="width:74.29%;background:linear-gradient(90deg,#6b5320,#f4b740)"></i></div></div>
+      <div><div class="mu" style="font-size:15px">시험 설정(확증 전)</div><span class="mono num cy" style="font-size:44px;font-weight:700" data-count="100.0">100.0</span><span class="mono mu2" style="font-size:15px;margin-left:6px">36/36</span><div class="bar" style="margin-top:8px"><i class="a-grow" ${d(1.2)} style="width:100%"></i></div></div></div>
+    <div style="font-size:15px;color:#c4d2e6;margin-top:16px;line-height:1.5">틀린 9문항은 모두 정답 조문을 제시하고도 <b class="warn">어느 시점의 판인지 밝히지 않음</b> · 목표 95 · 분모가 작아 확증에서 다시 확인</div></div>
+  <div class="note a-fade" ${d(1.3)} style="top:556px"><span class="k">NOTE</span><span>T는 질의 시점이 정해진 37문항 가운데 정답 조문을 제시한 35 · 36문항에서 잼(2026. 11. 7.)</span></div>
+  </div>`; } });
+
+/* 11 근거 */
+add({ ch: 3, eb: "과제 1 / 3 · 근거", ref: "3장 3절 72–75쪽", sub: [
+  "근거에서는 법령, 행정규칙, 자치법규로 나눈 조문 검색 층을 새로 세우고, 의미 검색과 단어 검색을 합친 하이브리드 검색으로 운영 경로를 옮겼습니다.",
+  "검색 실패의 상당 부분은 조문이 아니라 법령 이름에서 났습니다. 실무 통칭을 실제 법령에 잇지 못한 것입니다.",
+  "전환 전후 정확성은 3.71에서 3.97로 올랐고 완결성은 4.24에서 4.06으로 내려갔습니다. 조문 단위 법령 검색 성공률은 운영 서비스에서 78.33으로 목표 75를 넘었습니다."],
+  html: (s) => {
+  const nodes = [["질의", "실무 용어 · 통칭"], ["법령 이름 식별", "통칭 → 실제 법령"], ["조문 검색 층", "의미 + 단어 검색"], ["근거 조문", "원문 대조"]];
+  return `<div class="slide">${hd(s, "조문 검색 층의 재구성과 하이브리드 검색 전환")}
+  <div style="position:absolute;left:60px;right:60px;top:126px;display:grid;grid-template-columns:repeat(4,1fr);gap:40px">${nodes.map((n, i) => `<div class="pn a-pop" ${d(.2 + i * .2)} style="position:relative;padding:14px 16px;text-align:center;${i === 1 ? "border-color:var(--warn);box-shadow:0 0 18px rgba(244,183,64,.25)" : ""}">
+    <div style="font-size:19px;font-weight:700">${n[0]}</div><div class="mu" style="font-size:14px;margin-top:2px">${n[1]}</div></div>`).join("")}</div>
+  <svg style="position:absolute;left:60px;top:150px" width="1160" height="20">${[0, 1, 2].map((i) => `<path class="a-draw" ${d(.4 + i * .2)} style="--len:40" d="M${260 * (i + 1) + 40 * i + 3} 10 h34" stroke="#4fd1e8" stroke-width="2.5" fill="none"/>`).join("")}</svg>
+  <div class="a-fade" ${d(1)} style="position:absolute;left:360px;top:206px;width:260px;text-align:center;font-size:15px"><span class="warn">병목 · 실무 통용어 식별</span><br><span class="mono num" style="font-size:22px;font-weight:700"><span class="mu2">0/8</span> <span class="cy">→ 6/8</span></span><span class="mu2" style="font-size:12px"> (중간 보고)</span></div>
+  <div class="lab a-fade" ${d(1.1)} style="position:absolute;left:60px;top:290px">기본 설정 전환 전후 · 같은 200문항, 1~5점 절대 판정, 2026. 10. 2.</div>
+  <div style="position:absolute;left:60px;top:320px;width:720px;display:grid;grid-template-columns:1fr 1fr;gap:16px">${[["정확성", "3.71", "3.97", "#4fd1e8"], ["완결성", "4.24", "4.06", "#f4b740"]].map((k, i) => `<div class="pn a-rise" ${d(1.2 + i * .15)} style="position:relative;padding:18px 22px;height:130px">
+    <div class="mu" style="font-size:17px">${k[0]}</div><div style="display:flex;align-items:baseline;gap:14px;margin-top:8px"><span class="mono num mu2" style="font-size:34px;font-weight:700">${k[1]}</span><span class="mu2" style="font-size:24px">→</span><span class="mono num" style="font-size:52px;font-weight:700;color:${k[3]};text-shadow:0 0 14px ${k[3]}" data-count="${k[2]}">${k[2]}</span></div></div>`).join("")}</div>
+  <div class="pn a-rise" ${d(1.4)} style="left:808px;top:290px;width:412px;height:160px;padding:18px 22px">
+    <div class="lab">사례 원천 확장</div><div style="margin-top:8px"><span class="mono num glow" style="font-size:44px;font-weight:700">11.5</span><span class="cy" style="font-size:20px">만 건</span><span class="mu" style="font-size:15px;margin-left:10px">6개 원천</span></div>
+    <div class="mu" style="font-size:14px;line-height:1.5;margin-top:4px">판례 · 해석례 · 중앙행정해석 · 행정심판례 · 국토부 질의응답 · 공공건축 자문 (국민신문고 민원 6.7만 건 별도)</div></div>
+  <div class="pn a-rise" ${d(1.6)} style="left:60px;top:472px;width:1160px;height:76px;padding:0 22px;display:flex;align-items:center;gap:20px;border-color:rgba(79,209,232,.5)">
+    <span style="font-size:18px">조문 단위 법령 검색 성공률 <b>S</b> · 서비스 설정</span><span class="mono num cy glow" style="font-size:38px;font-weight:700" data-count="78.33">78.33</span><span class="cy">%</span>
+    <div class="bar" style="flex:1"><i class="a-grow" ${d(1.8)} style="width:78.33%"></i><span style="position:absolute;left:75%;top:-6px;bottom:-6px;border-left:2px dashed #e6eef8"></span></div><span class="mono mu" style="font-size:14px">목표 75</span><span class="chip cy a-stamp" ${d(2.1)}>달성</span></div>
+  <div class="note a-fade" ${d(1.9)} style="top:566px"><span class="k">NOTE</span><span>S는 별도 표본 300문항, 2026. 11. 7. 측정</span></div>
+  </div>`; } });
+
+/* 12 지역 */
+add({ ch: 3, eb: "과제 3 / 3 · 지역", ref: "3장 4절 76–79쪽", sub: [
+  "지역에서는 자치법규 명칭 16만 3천여 건, 관할 260곳 전부를 갖추었습니다.",
+  "명칭과 소속, 판 식별정보만 미리 담아 두고, 조문은 법령이 조례에 위임한 관계를 따라 질의할 때 가져옵니다.",
+  "위임관계 연계 조회의 확장분은 시험 조건에서 세 칸 모두 크게 올랐고, 운영 반영 여부는 확증 측정 뒤 결정합니다."],
+  html: (s) => {
+  const L = [["3층", "자주 불린 것을 올리는 층", "조회 빈도 기록이 쌓인 뒤 착수", "설계 단계", "#5f7393", true], ["2층", "필요할 때 불러오는 층", "위임 관계를 따라 조례 조문을 그때 조회", "운영 반영", "#4fd1e8"], ["1층", "미리 담아 두는 층", "이름 · 소속 · 판 식별정보만 확보", "구축 완료", "#2c8ab8"]];
+  const C = [["칸 1", 203, 287, 294], ["칸 2", 445, 524, 528], ["칸 3", 208, 327, 336]];
+  return `<div class="slide">${hd(s, "자치법규 명칭 전량과 위임관계를 반영한 조례 연계")}
+  <div style="position:absolute;left:60px;top:122px;width:520px;display:grid;grid-template-columns:1.3fr 1fr;gap:14px">
+    <div class="pn a-rise" ${d(.1)} style="position:relative;padding:16px 20px;grid-row:span 2"><div class="mu" style="font-size:16px">자치법규 명칭</div><div style="margin-top:6px;white-space:nowrap"><span class="mono num glow" style="font-size:46px;font-weight:700" data-count="163253">163,253</span><span class="cy" style="font-size:19px;margin-left:4px">건</span></div><div class="mu2" style="font-size:14px">법제처 신고 대비 100.03%</div>
+      <div style="margin-top:22px;display:flex;align-items:baseline;gap:8px"><span class="mono num cy" style="font-size:40px;font-weight:700" data-count="260">260</span><span class="mu">곳 · 관할 전부</span></div></div>
+    <div class="pn a-rise" ${d(.25)} style="position:relative;padding:14px 18px"><div class="mu" style="font-size:15px">미리 보유한 조문</div><span class="mono num" style="font-size:32px;font-weight:700">9.04</span><span class="mu">%</span><div class="mu2" style="font-size:12px">현행 종 대비</div></div>
+    <div class="pn a-rise" ${d(.4)} style="position:relative;padding:14px 18px"><div class="mu" style="font-size:15px">조례 연계 답변</div><div style="display:flex;align-items:center;gap:10px;margin-top:8px"><span class="sw-t on" ${d(1.0)}><b></b></span><b class="cy" style="font-size:20px">운영 반영</b></div></div></div>
+  <div style="position:absolute;left:640px;top:118px;width:580px;height:300px">${L.map((l, i) => `<div class="a-rise" ${d(.5 + (2 - i) * .2)} style="position:absolute;left:${i * 18}px;top:${i * 92}px;width:${560 - i * 18}px;height:84px;border-radius:8px;padding:12px 18px;background:${l[5] ? "transparent" : "var(--panel)"};border:1.5px ${l[5] ? "dashed" : "solid"} ${l[4]};box-shadow:${l[1].includes("필요") ? "0 0 22px rgba(79,209,232,.3)" : "none"};transform:skewX(-8deg)">
+    <div style="transform:skewX(8deg);display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:6px 12px"><span class="mono" style="font-weight:700;color:${l[4]};font-size:18px;grid-row:span 2">${l[0]}</span><span style="font-size:18px;font-weight:700">${l[1]}</span><span class="chip" style="color:${l[4]};grid-row:span 2">${l[3]}</span><span class="mu" style="font-size:14px">${l[2]}</span></div></div>`).join("")}</div>
+  <div class="lab a-fade" ${d(1.1)} style="position:absolute;left:60px;top:410px">조례 위임 연계 조건 · 통과 행 · 서비스 설정 → 연동 기능을 켠 시험 조건 (2026. 11. 1.)</div>
+  <div style="position:absolute;left:60px;right:60px;top:440px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">${C.map((c, i) => `<div class="pn a-rise" ${d(1.2 + i * .15)} style="position:relative;padding:14px 18px;height:96px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="mu" style="font-size:15px;font-weight:700">${c[0]}</span><span><span class="mono num mu2" style="font-size:20px">${c[1]}</span><span class="mu2"> → </span><span class="mono num cy glow" style="font-size:30px;font-weight:700" data-count="${c[2]}">${c[2]}</span><span class="mono mu2" style="font-size:15px">/${c[3]}</span></span></div>
+    <div class="bar" style="margin-top:12px"><i style="width:${(c[1] / c[3] * 100).toFixed(1)}%;background:#2c3e5c;box-shadow:none"></i><i class="a-grow" ${d(1.5 + i * .15)} style="width:${(c[2] / c[3] * 100).toFixed(1)}%;opacity:.9"></i></div></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1.8)} style="top:560px"><span class="k">NOTE</span><span>위임관계 연계 조회의 확장분은 시험 설정에서 측정 — 운영 반영 여부는 확증 측정 뒤 결정</span></div>
+  </div>`; } });
+
+/* 13 운영 반영 */
+add({ ch: 3, ref: "3장 6절 1)·2) 83–84쪽", sub: [
+  "구현을 마친 기능이라도 운영에서 켜지 않으면 이용자에게는 없는 기능입니다.",
+  "검증을 거친 기능부터 운영에 반영했고, 켜는 결정은 연구책임자가 측정 결과를 보고 승인한 경우에만 내렸습니다.",
+  "시험 설정은 생성 비용이 서비스 설정의 약 22배여서 운영 반영을 결정하지 않았습니다."],
+  html: (s) => {
+  const R = [["근거", "법령 · 행정규칙 · 자치법규 조문 검색 층과 하이브리드 검색", 1, "검색 통계가 남은 답 3,149건 모두 두 검색 실행"],
+    ["근거", "장문 별표 · 서식의 검색 단위 분할", 1, "법령 6,687행 · 행정규칙 7,751행 전부"],
+    ["근거", "사례 원천 확장과 사례 인용 조문의 현행 유효성 표시", 1, "6개 원천 11.5만 건"],
+    ["시점", "법령 개정의 일일 반영", 1, "최근 30일 30일 실행(9. 29.~10. 28.)"],
+    ["시점", "질의 기준 시점의 판으로 답하는 조문 단위 시점 조회", 1, "서비스 설정 T 74.29(26/35, 11. 7.) · 연동 수리분은 시험 설정에만"],
+    ["시점", "연혁 전문의 시점별 조회", 0, "운영 답변 경로 호출 0건, 진단 도구에서만 사용"],
+    ["지역", "조례 연계 답변", 1, "위임관계 연계 조회의 확장분은 시험 설정에서 측정"],
+    ["공통", "에이전트 경로", 0, "운영 답 3,921건 중 0건, 선택 설정으로 비교 측정만"],
+    ["공통", "웹검색 힌트", 0, "코드에는 있으나 운영 사용 0건"]];
+  return `<div class="slide">${hd(s, "적재와 서비스 반영의 구분 — 켠 것과 꺼 둔 것")}
+  <div style="position:absolute;left:60px;right:60px;top:118px;display:flex;flex-direction:column">${R.map((r, i) => `<div class="a-rise" ${d(.15 + i * .07)} style="display:grid;grid-template-columns:62px 1fr 92px 1fr;gap:0 18px;align-items:center;height:47px;border-bottom:1px solid var(--line)">
+    <span class="mono" style="font-size:14px;color:var(--mu2)">${r[0]}</span><span style="font-size:16.5px;${r[2] ? "" : "color:var(--mu)"}">${r[1]}</span>
+    <span style="display:flex;align-items:center;gap:8px"><span class="sw-t ${r[2] ? "on" : ""}" ${d(.6 + i * .12)}><b></b></span><b style="font-size:14px;color:${r[2] ? "var(--cy)" : "var(--dim)"}">${r[2] ? "켬" : "끔"}</b></span>
+    <span class="mu" style="font-size:14.5px">${r[3]}</span></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1.8)} style="top:560px"><span class="k">NOTE</span><span><b class="cy">켜는 결정은 연구책임자가 측정 결과를 보고 승인한 경우에만</b> · 시험 설정은 생성 비용이 서비스 설정의 약 22배라 운영 반영을 결정하지 않음</span></div>
+  </div>`; } });
+
+/* 14 서비스 화면 */
+add({ ch: 3, ref: "3장 6절 3) 85–89쪽", sub: [
+  "운영 중인 공개 시범 서비스의 실제 화면입니다.",
+  "질의 기준 시점의 판으로 확인하는 조문, 지역을 특정한 질의의 조례 연계 답변, 통칭으로 부른 법령의 식별을 세 사례로 보여 드립니다.",
+  "정확도는 이 화면이 아니라 4장의 측정으로 판단합니다."],
+  html: (s) => {
+  const sc = [["1", "질의 기준 시점의 판으로 확인하는 조문"], ["2", "지역을 특정한 질의와 조례 연계 답변"], ["3", "통칭으로 부른 법령의 식별"]];
+  return `<div class="slide">${hd(s, "공개 (시범) 서비스 화면으로 본 사용 예시")}
+  <div style="position:absolute;left:60px;right:60px;top:116px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px">${sc.map((c, i) => `<div class="pn a-rise" ${d(.2 + i * .2)} style="position:relative;padding:12px 14px 14px;height:452px;overflow:hidden">
+    <div style="display:flex;gap:10px;align-items:baseline"><span class="mono cy" style="font-weight:700;font-size:14px">사례 ${c[0]}</span><span style="font-size:16px;font-weight:700">${c[1]}</span></div>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;max-height:392px;overflow:hidden;border-radius:6px">
+      <img src="img/fig3_scr_${c[0]}_a.png" alt="사례 ${c[0]} 화면 위쪽" style="display:block;width:100%;border-radius:4px;border:1px solid var(--line)">
+      <img src="img/fig3_scr_${c[0]}_b.png" alt="사례 ${c[0]} 화면 아래쪽" style="display:block;width:100%;border-radius:4px;border:1px solid var(--line)"></div></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1)} style="top:586px"><span class="k">LIVE</span><span><b class="cy mono">alris.auri.re.kr</b> — 로그인 없이 쓰는 화면에서 2026. 11. 8. 캡처. 정확도는 4장의 측정으로 판단</span></div>
+  </div>`; } });
+
+/* 15 AI 관리 체계 */
+add({ ch: 3, ref: "3장 7절 91–100쪽", sub: [
+  "운영 중인 서비스를 멈추지 않고 개선하기 위해, 연구책임자가 마스터플랜과 과업을 정하고 채택과 기각, 운영 반영을 승인했습니다.",
+  "그 범위 안의 작업 집행에 AI 코딩 에이전트를 활용했습니다.",
+  "킬스위치, 기본 꺼짐, 반증 검증, 되돌리기, 비밀값 차단의 다섯 장치를 두었습니다.",
+  "9월 3일부터 11월 2일까지 2,849건의 변경을 반영했고, 개선 과업 172개 가운데 159개를 마쳤습니다."],
+  html: (s) => {
+  const role = ["마스터플랜 수립, 과업 정의와 순서", "설계 검토, 승인 대기 항목의 채택 · 기각", "서비스 설정 변경과 새 기능 켜기의 운영 반영 승인", "감독 지시와 정지, 권한 범위의 단계적 조정"];
+  const safe = [["킬스위치", "재배포 없이 끔"], ["기본 꺼짐", "측정 뒤 켜기"], ["반증 검증", "별도 검증 에이전트"], ["되돌리기", "사본 먼저, 되돌릴 수 없는 작업 금지"], ["비밀값 차단", ""]];
+  const ag = Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return `<circle class="a-pop" ${d(.8 + i * .05)} cx="${(170 + Math.cos(a) * 118).toFixed(1)}" cy="${(170 + Math.sin(a) * 118).toFixed(1)}" r="7" fill="#4fd1e8" style="filter:drop-shadow(0 0 5px #4fd1e8)"/>`; }).join("");
+  return `<div class="slide">${hd(s, "연구책임자가 방향 · 승인 · 정지를 쥐는 관리 · 개선 체계")}
+  <div class="pn a-rise" ${d(.2)} style="left:60px;top:122px;width:350px;height:330px;padding:18px 20px"><div class="lab">연구책임자가 정하는 일</div><ul class="li" style="margin-top:14px;gap:12px">${role.map((r) => `<li>${r}</li>`).join("")}</ul></div>
+  <svg style="position:absolute;left:470px;top:110px" width="340" height="340">
+    <circle class="a-draw" ${d(.4)} style="--len:742" cx="170" cy="170" r="118" fill="none" stroke="#2c5a8a" stroke-width="2" stroke-dasharray="4 6"/>${ag}
+    <circle cx="170" cy="170" r="62" fill="rgba(79,209,232,.12)" stroke="#4fd1e8" stroke-width="2" class="a-pop" ${d(.3)}/>
+    <text x="170" y="164" text-anchor="middle" font-size="17" font-weight="700" fill="#e6eef8">연구책임자</text><text x="170" y="188" text-anchor="middle" font-size="13" fill="#9fb3d1">방향 · 승인 · 정지</text>
+    <text x="170" y="326" text-anchor="middle" font-size="14" fill="#7f93b3">범위 안의 작업 집행 · AI 코딩 에이전트</text></svg>
+  <div class="pn a-rise" ${d(.5)} style="left:870px;top:122px;width:350px;height:330px;padding:18px 20px"><div class="lab">안전장치</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">${safe.map((x, i) => `<div class="a-rise" ${d(.8 + i * .1)} style="display:flex;gap:10px;align-items:baseline"><span class="mono cy" style="font-size:13px">0${i + 1}</span><b style="font-size:17px">${x[0]}</b><span class="mu" style="font-size:14px">${x[1]}</span></div>`).join("")}</div></div>
+  <div style="position:absolute;left:60px;right:60px;top:470px;display:grid;grid-template-columns:1fr 1fr 2fr;gap:16px">
+    <div class="pn a-rise" ${d(1)} style="position:relative;padding:12px 18px"><div class="mu" style="font-size:14px">반영한 변경 · 9. 3.~11. 2.</div><span class="mono num glow" style="font-size:36px;font-weight:700" data-count="2849">2,849</span><span class="cy">건</span><div class="mu2" style="font-size:12px">커밋 총량, 감독 작업분 포함</div></div>
+    <div class="pn a-rise" ${d(1.1)} style="position:relative;padding:12px 18px"><div class="mu" style="font-size:14px">완성한 개선 과업</div><span class="mono num glow" style="font-size:36px;font-weight:700">159</span><span class="mono mu2" style="font-size:22px"> / 172</span></div>
+    <div class="a-fade" ${d(1.3)} style="display:flex;align-items:center;font-size:18px;line-height:1.5;padding-left:6px">이용자에게 영향을 주는 변경은 <b class="cy">&nbsp;연구책임자가 승인한 것만&nbsp;</b> 운영에 반영</div></div>
+  <div class="note a-fade" ${d(1.5)} style="top:586px;font-size:16px"><span class="k">REF</span><span>「에이전틱 AI 제로트러스트 안내서」(과기정통부 · KISA, 2026. 11.)의 행위 통제 · 차등 통제 · 사람의 최종 통제와 같은 방향</span></div>
+  </div>`; } });
+
+/* 16 왜 자율 루프인가 */
+add({ ch: 3, ref: "3장 7절 91–92쪽", sub: [
+  "이 체계를 택한 까닭은 개선 작업 대부분이 같은 일을 조건을 바꾸어 가며 되풀이해야 하는 시험이었기 때문입니다.",
+  "시점 조회 대상만 32만 판이 넘고, 61일 동안 하루 평균 46.7건의 변경과 9.6건의 측정 문서, 4.8개의 배포 판이 쌓였습니다.",
+  "대표값 측정 한 번에 답 900건을 판정했고, 일일 갱신 회차에서는 수리 지점 73건을 찾아 처분했습니다.",
+  "연구책임자는 이 반복을 단계마다 사람이 지시해서는 연구기간 안에 소화하기 어렵다고 보고, 반복 집행에 AI 에이전트를 활용하는 구도를 택했습니다."],
+  html: (s) => {
+  const K = [["32만+", "판", "시점 조회 대상", "법령 169,604 + 행정규칙 151,010"], ["46.7", "건/일", "개발 저장소 변경", "61일 평균 · 변경 없는 날 0일"], ["9.6", "건/일", "측정 문서", "9. 3.~11. 2."], ["4.8", "개/일", "배포 판", "주말 · 공휴일 포함"],
+    ["900", "건", "측정 1회 판정량", "300문항 × 세 구성"], ["73", "건", "갱신 수리 지점", "62 수리 반영 · 11 사유 기록"], ["53", "곳", "기존 데이터를 읽던 코드", "새 구조를 옆에 짓고 하나씩 옮김"], ["44→85", "종", "운영 컬렉션", "9. 6. → 10. 6."]];
+  return `<div class="slide">${hd(s, "왜 자율 실행 루프인가 — 반복의 규모")}
+  <div style="position:absolute;left:60px;right:60px;top:122px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px">${K.map((k, i) => `<div class="pn a-rise" ${d(.15 + i * .1)} style="position:relative;padding:14px 18px;height:156px">
+    <div class="mu" style="font-size:15px">${k[2]}</div><div style="margin-top:6px;white-space:nowrap"><span class="mono num glow" style="font-size:40px;font-weight:700"${/^[\d.]+$/.test(k[0]) ? ` data-count="${k[0]}"` : ""}>${k[0]}</span><span class="cy" style="font-size:17px;margin-left:4px">${k[1]}</span></div>
+    <div class="mu2" style="font-size:13px;margin-top:6px;line-height:1.4">${k[3]}</div></div>`).join("")}</div>
+  <div class="a-wipe" ${d(1.1)} style="position:absolute;left:60px;right:60px;top:478px;font-size:21px;font-weight:700;line-height:1.5;border-left:4px solid var(--cy);padding:6px 0 6px 22px;background:linear-gradient(90deg,rgba(79,209,232,.12),transparent 70%)">반복 집행에는 AI 에이전트를 활용하고, <span class="cy">무엇을 고칠지 · 결과를 받아들일지 · 이용자에게 내보낼지</span>는 연구책임자가 정함</div>
+  <div class="note a-fade" ${d(1.4)} style="top:568px;font-size:15px"><span class="k">단서</span><span>변경 건수는 에이전트가 집행한 변경과 연구책임자의 감독 작업분을 나누지 않은 총량이며, 사람이 맡았을 때의 작업 시간은 산출하지 않음</span></div>
+  </div>`; } });
+
+/* 17 Agent4D 리플레이 */
+add({ ch: 3, ref: "3장 7절 · Agent4D", agent: true, sub: [
+  "연구책임자가 정한 과업을 여러 에이전트가 나누어 집행한 기록을 그대로 재생한 화면입니다.",
+  "11월 5일 아침 가장 바빴던 9분으로, 에이전트가 최대 29개까지 동시에 움직였습니다. 4배속, 2분 15초로 반복 재생됩니다.",
+  "Agent4D는 이 감독을 위해 연구책임자가 개발해 오픈소스로 공개한 도구입니다. 공개 범위는 ALRIS 개발 프로젝트로 한정했습니다."],
+  html: (s) => {
+  const bl = Array.from({ length: 29 }, (_, i) => { const a = i * 2.39996, r = 22 + (i % 7) * 12; return `<circle class="bl" style="--d:${(i * .13).toFixed(2)}s" cx="${(110 + Math.cos(a) * r).toFixed(1)}" cy="${(110 + Math.sin(a) * r).toFixed(1)}" r="3.4" fill="#4fd1e8"/>`; }).join("");
+  return `<div class="slide">${hd(s, "작업 리플레이 — 11. 5. 가장 바쁜 9분")}
+  <a class="go a-pop" ${d(.2)} href="${AGENT4D.url}" target="_blank" rel="noopener noreferrer" style="left:60px;top:124px;width:650px;height:250px">
+    <span class="tri"></span><span style="font-size:36px;font-weight:900;letter-spacing:-.01em">리플레이 열기</span><span class="mu" style="font-size:16px">새 탭에서 바로 재생 · 열리는 데 6~14초</span></a>
+  <div style="position:absolute;left:60px;top:396px;width:650px;display:flex;flex-direction:column">${[["구간", "2026. 11. 5. 07:49~07:58 (9분)"], ["동시 가동", "에이전트 최대 29개"], ["재생", "4배속 · 2분 15초 · 반복"], ["실시간", "화면의 「실시간으로」 단추"]].map((f, i) => `<div class="a-rise" ${d(.5 + i * .1)} style="display:grid;grid-template-columns:130px 1fr;align-items:center;height:42px;border-bottom:1px solid var(--line)"><span class="mono cy" style="font-size:14px">${f[0]}</span><span style="font-size:18px">${f[1]}</span></div>`).join("")}</div>
+  <div class="pn a-fade" ${d(.4)} style="left:740px;top:124px;width:480px;height:250px;padding:14px;display:flex;gap:16px;align-items:center">
+    <svg class="radar" width="220" height="220" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="none" stroke="#22385c"/><circle cx="110" cy="110" r="66" fill="none" stroke="#22385c"/><circle cx="110" cy="110" r="33" fill="none" stroke="#22385c"/>
+      <path d="M110 10 V210 M10 110 H210" stroke="#1a2c49"/><g class="sw"><path d="M110 110 L110 10 A100 100 0 0 1 196.6 60 Z" fill="url(#rg)"/></g>
+      <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4fd1e8" stop-opacity=".35"/><stop offset="1" stop-color="#4fd1e8" stop-opacity="0"/></linearGradient></defs>${bl}</svg>
+    <div><div class="mono cy" style="font-size:13px;letter-spacing:.1em">29 AGENTS</div><div style="font-size:16px;color:var(--mu);line-height:1.5;margin-top:6px">동시 가동 규모를 나타낸 도식<br>실제 화면은 리플레이에서</div></div></div>
+  <div class="pn a-fade" ${d(.6)} style="left:740px;top:390px;width:480px;height:160px;padding:14px;display:flex;gap:16px;align-items:center">
+    <div style="background:#fff;border-radius:6px;padding:8px;flex:none"><img src="img/agent4d_qr.svg" alt="리플레이 링크 QR 코드" width="118" height="118" style="display:block"></div>
+    <div><div style="font-size:18px;font-weight:700">개인 단말로 보기</div><div class="warn" style="font-size:15px;font-weight:700;margin-top:4px">링크 유효 ${AGENT4D.until}까지</div><div class="mono mu2" style="font-size:12px;margin-top:6px">github.com/burn001/agent4d · Apache 2.0</div></div></div>
+  <div class="note a-fade" ${d(1)} style="top:572px;font-size:15.5px"><span class="k">공개 범위</span><span>ALRIS 개발 프로젝트 작업만 보이며, 파일 경로 · 명령 · 대화 내용과 조작 기능은 서버에서 걸러 공개하지 않음 · Agent4D는 AI 에이전트를 활용해 개발했고 설계 · 검토 · 공개는 연구책임자가 결정</span></div>
+  </div>`; } });
+
+/* Ⅳ */
+add({ ch: 4, chap: true, dur: 4.5, sub: ["넷째, 성능 평가입니다. 세 지표를 어떻게 세는지부터 차근차근 말씀드리겠습니다."], html: chCard(4, "성능 평가", ["평가 체계 · 표본과 판정", "S · C · T는 어떻게 세나", "목표 대비 결과 · C가 갈리는 이유", "1차 목표의 재판정과 시범 운영"]) });
+
+/* 18 평가 체계 */
+add({ ch: 4, ref: "4장 1절 102–106쪽", sub: [
+  "기관 경영목표와 연결된 세 지표, 법령 검색 성공률 S, 전체 정답 일치율 C, 시점별 검색 정확도 T를 정의했습니다.",
+  "표본은 확증용 1,205문항, 개선 반복용 개발 50문항, 대표값용 별도 300문항으로 역할을 나눴습니다.",
+  "같은 2025년 답을 판정기만 바꿔 재면 13~16점이 움직였습니다. 그래서 올해 값은 같은 판정기로 다시 잰 베이스라인과만 비교합니다."],
+  html: (s) => {
+  const M = [["S", "조문 단위 법령 검색 성공률", "검색 결과에 든 정답 조문의 비율(도달 가능 분모, 문항 평균)", "75"], ["C", "전체 정답 일치율", "정답과 결론이 같은 비율 — 판정 기준 재정립 중", "85"], ["T", "시점별 검색 정확도", "질의 시점이 정해진 문항에서 답 근거의 판이 정답 판과 일치", "95"]];
+  const smp = [["1,205", "2025년 벤치마크", "확증 측정 · 남은 기간", 1205], ["300", "별도 표본", "대표값 · 개발 표본과 겹치지 않음", 300], ["50", "개발 표본", "개선 반복", 50]];
+  return `<div class="slide">${hd(s, "세 지표의 정의와 측정 절차")}
+  <div style="position:absolute;left:60px;top:122px;width:600px;display:flex;flex-direction:column;gap:12px">${M.map((m, i) => `<div class="pn a-rise" ${d(.15 + i * .12)} style="position:relative;display:grid;grid-template-columns:72px 1fr auto;gap:16px;align-items:center;padding:12px 18px 12px 12px">
+    <div class="mono glow" style="width:72px;height:72px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;background:rgba(79,209,232,.12);border:1px solid var(--cy)">${m[0]}</div>
+    <div><div style="font-size:19px;font-weight:700">${m[1]}</div><div class="mu" style="font-size:14.5px;margin-top:3px;line-height:1.4">${m[2]}</div></div><div style="text-align:right"><div class="mu2" style="font-size:12px">목표</div><div class="mono cy" style="font-size:22px;font-weight:700">${m[3]}+</div></div></div>`).join("")}
+    <div class="a-fade" ${d(.6)} style="font-size:16px;color:var(--mu)">세 지표 평균 목표 <b class="cy mono">80+</b> · 기관 경영목표와 연결</div></div>
+  <div class="pn a-rise" ${d(.5)} style="left:690px;top:122px;width:530px;height:212px;padding:16px 20px"><div class="lab">표본을 역할별로 나눔</div>
+    ${smp.map((x, i) => `<div style="display:grid;grid-template-columns:70px 1fr;gap:12px;align-items:center;margin-top:12px"><span class="mono num" style="font-size:22px;font-weight:700;text-align:right">${x[0]}</span>
+      <div><div style="font-size:15px"><b>${x[1]}</b> <span class="mu">${x[2]}</span></div><div class="bar" style="margin-top:5px;height:8px"><i class="a-grow" ${d(.8 + i * .12)} style="width:${Math.max(3, x[3] / 1205 * 100).toFixed(1)}%"></i></div></div></div>`).join("")}</div>
+  <div class="pn a-rise" ${d(.7)} style="left:690px;top:350px;width:530px;height:196px;padding:16px 20px;border-color:rgba(244,183,64,.45)"><div class="lab" style="color:var(--warn)">판정 모델이 값을 움직인다</div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:10px"><span class="mu" style="font-size:15px">같은 2025년 답 · V1 핵심</span><span class="mono num" style="font-size:30px;font-weight:700">73.45</span><span class="warn">→</span><span class="mono num warn" style="font-size:30px;font-weight:700">60.34</span><span class="mono warn" style="font-size:15px">−13.1점</span></div>
+    <div class="mu" style="font-size:15px;margin-top:4px">V1 전체는 15.7점 차이</div>
+    <div style="font-size:15.5px;margin-top:10px;line-height:1.5">올해 값은 <b class="cy">같은 판정기로 다시 잰 베이스라인</b>과만 비교 · 시점별 정답 판은 법제처 원천에서 계산(누출 방지)</div></div>
+  <div class="note a-fade" ${d(1)} style="top:566px;font-size:15.5px"><span class="k">NOTE</span><span>종전 베이스라인 78%(2026. 2., 100건)는 표본을 복원할 수 없어 같은 판정기로 다시 재지 못함 → 베이스라인의 출처로만 남기고 올해 값과 비교하지 않음</span></div>
+  </div>`; } });
+
+/* 18-1~3 S · C · T 산정 방법 — 박사님 지시(11.08.): 쉽고 자세하게, 발표의 핵심
+   정의는 [표 4-1]·4장 1절·2절, 값은 [표 4-6]·[표 4-7]. 예시 문항은 설명용(실제 문항 아님) */
+function metric(o) {
+  return (s) => `<div class="slide">${hd(s, o.title)}
+  <div class="pn a-rise" ${d(.1)} style="left:60px;top:118px;width:372px;height:428px;padding:18px 20px">
+    <div style="display:flex;align-items:center;gap:12px"><span class="mono glow" style="width:54px;height:54px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;background:rgba(79,209,232,.14);border:1px solid var(--cy)">${o.k}</span>
+      <div><div style="font-size:19px;font-weight:700">${o.name}</div><div class="mono cy" style="font-size:13px">목표 ${o.goal} 이상</div></div></div>
+    <div class="lab" style="margin-top:16px">무엇을 재나</div>
+    <div style="font-size:18px;line-height:1.5;margin-top:6px;font-weight:500">${o.q}</div>
+    <div class="lab" style="margin-top:16px">어떻게 세나</div>
+    <div class="a-pop" ${d(.5)} style="margin-top:8px;padding:12px 14px;border:1px solid var(--cy);border-radius:8px;background:rgba(79,209,232,.08)">${o.formula}</div>
+    <div style="font-size:14.5px;color:var(--mu);line-height:1.5;margin-top:10px">${o.how}</div></div>
+  <div class="pn a-fade" ${d(.3)} style="left:452px;top:118px;width:470px;height:428px;padding:16px 20px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="lab">한 문항으로 따라가 보기</span><span class="mono mu2" style="font-size:11.5px">설명용 예시 · 실제 문항 아님</span></div>
+    ${o.example}</div>
+  <div style="position:absolute;left:942px;top:118px;width:278px;display:flex;flex-direction:column;gap:12px">
+    <div class="pn a-rise" ${d(.7)} style="position:relative;padding:14px 16px;border-color:rgba(244,183,64,.45)"><div class="lab" style="color:var(--warn)">${o.cautionTitle}</div>
+      <ul class="li w" style="margin-top:8px;gap:7px">${o.caution.map((t) => `<li style="font-size:14.5px;line-height:1.45">${t}</li>`).join("")}</ul></div>
+    <div class="pn a-rise" ${d(.9)} style="position:relative;padding:14px 16px;border-color:rgba(79,209,232,.5)"><div class="lab">이번 값 · 서비스 설정</div>
+      <div style="margin-top:4px;white-space:nowrap"><span class="mono num glow" style="font-size:40px;font-weight:700;color:${o.col}" data-count="${o.v}">${o.v}</span><span style="color:${o.col}">%</span></div>
+      <div class="mu" style="font-size:13.5px;line-height:1.45">${o.vnote}</div></div></div>
+  <div class="note a-fade" ${d(1.6)} style="top:566px;font-size:16px"><span class="k">핵심</span><span>${o.key}</span></div>
+  </div>`;
+}
+const chipA = (t, on, dl) => `<span class="a-pop" ${d(dl)} style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;font-size:14px;border:1.5px ${on === 2 ? "dashed #3a4a68" : "solid " + (on ? "var(--cy)" : "#ff7a66")};color:${on === 2 ? "var(--dim)" : "var(--ink)"};background:${on === 1 ? "rgba(79,209,232,.12)" : on === 0 ? "rgba(255,122,102,.1)" : "transparent"}">${t}</span>`;
+
+add({ ch: 4, ref: "4장 1절 102–106쪽", sub: [
+  "첫째 지표 S, 조문 단위 법령 검색 성공률입니다. 시스템이 답의 근거로 찾아온 조문 속에 정답 조문이 들어 있는지를 봅니다.",
+  "문항마다 정답 조문 가운데 검색 결과에 든 것의 비율을 구하고, 그 비율을 모든 문항에 걸쳐 평균합니다.",
+  "분모에는 시스템이 보유해서 찾아낼 수 있는 정답 조문만 넣습니다. 아직 보유하지 않은 조문까지 넣으면 데이터를 넓히는 성과가 검색 품질의 하락처럼 보이기 때문입니다. 보유 범위는 커버리지 지표로 따로 잽니다.",
+  "운영 서비스의 S는 78.33%로 목표 75%를 넘었습니다."],
+  html: metric({ k: "S", name: "조문 단위 법령 검색 성공률", goal: 75, col: "var(--cy)", v: "78.33", title: "S는 어떻게 세나 — 정답 조문을 찾아왔는가",
+    q: "시스템이 답의 근거로 찾아온 조문 속에 <b class=\"cy\">정답 조문</b>이 들어 있는가",
+    formula: `<div style="font-size:15px;color:var(--mu)">문항별 성공률</div><div style="display:flex;align-items:center;gap:10px;margin-top:4px"><div style="text-align:center;font-size:15.5px;line-height:1.35"><div style="border-bottom:1.5px solid var(--ink);padding-bottom:3px">검색 결과에 든 정답 조문 수</div><div style="padding-top:3px">도달 가능한 정답 조문 수</div></div></div><div style="font-size:16px;margin-top:8px"><b class="cy">S</b> = 문항별 성공률의 <b>평균</b></div>`,
+    how: "도달 가능 = 시스템이 보유해 찾아낼 수 있는 조문(코퍼스에 실재). 정답 조문은 국토교통부 질의회신이 근거로 든 조문이다",
+    example: `<div style="margin-top:12px;font-size:15px;color:#c4d2e6">질의 ① 정답 조문 3개</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">${chipA("조문 가 ✓ 찾음", 1, .6)}${chipA("조문 나 ✓ 찾음", 1, .75)}${chipA("조문 다 · 미보유", 2, .9)}</div>
+      <div class="a-fade" ${d(1.0)} style="margin-top:6px;font-size:15px">→ 분모 2(미보유 1개 제외) · 찾음 2 → <b class="mono cy">2/2 = 100%</b></div>
+      <div style="margin-top:16px;font-size:15px;color:#c4d2e6">질의 ② 정답 조문 4개(모두 보유)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">${chipA("가 ✓", 1, 1.1)}${chipA("나 ✓", 1, 1.2)}${chipA("다 ✓", 1, 1.3)}${chipA("라 ✗ 못 찾음", 0, 1.4)}</div>
+      <div class="a-fade" ${d(1.5)} style="margin-top:6px;font-size:15px">→ <b class="mono cy">3/4 = 75%</b></div>
+      <div class="a-rise" ${d(1.7)} style="margin-top:18px;padding:12px 14px;border-top:1px solid var(--line);font-size:17px">두 문항의 S = (100 + 75) ÷ 2 = <b class="mono cy glow" style="font-size:22px">87.5%</b></div>
+      <div class="mu" style="font-size:13.5px;margin-top:8px;line-height:1.45">미보유 조문 「다」는 검색 실패가 아니라 <b>커버리지</b>(정답 조문 전체 분모)에서 따로 잡힌다</div>`,
+    cautionTitle: "분모와 산출 방식", caution: ["전반기 실측에서 정답 조문 중 코퍼스에 있던 것은 3분의 2 미만 — 그래서 검색 품질과 커버리지를 분리", "베이스라인 61~63%는 법령명 단위라 조문 단위 S와 바로 비교하지 않음", "적중을 모아 구하면 값이 달라짐(10. 13. 적중률 83.7%) → 산출식을 함께 공표"],
+    vnote: "별도 표본 300문항, 2026. 11. 7. · 시험 설정 86.68% · <b class=\"cy\">목표 달성</b>",
+    key: "S는 <b class=\"cy\">검색</b>이 근거를 찾아오는지를 잰다 — 분모를 「찾을 수 있는 조문」으로 묶어 데이터 확장과 검색 품질을 섞지 않는다" }) });
+
+add({ ch: 4, ref: "4장 1절 102–106쪽", sub: [
+  "둘째 지표 C, 전체 정답 일치율입니다. 시스템이 내린 법적 결론이 정답, 곧 국토교통부 질의회신의 결론과 같은지를 봅니다.",
+  "판정은 언어모델 판정기가 합니다. 결론의 방향과 근거가 함께 맞으면 정답으로 세고, 표현의 강도만 다른 경우도 정답으로 봅니다. 같은 판정 모델로 두 번 판정해 평균합니다.",
+  "C는 정답으로 판정된 문항 수를 판정한 문항 수로 나눈 값입니다.",
+  "판정기를 바꾸면 같은 답에서도 13~16점이 움직이기 때문에, 올해 값은 같은 판정기로 다시 잰 베이스라인과만 비교합니다. 판정 기준은 아직 다시 세우는 중이어서 운영 서비스의 C 65.00%는 판정 기준 확정 뒤에 판정합니다.",
+  "C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정합니다."],
+  html: metric({ k: "C", name: "전체 정답 일치율", goal: 85, col: "var(--warn)", v: "65.00", title: "C는 어떻게 세나 — 결론이 정답과 같은가",
+    q: "시스템이 내린 <b class=\"cy\">법적 결론</b>이 정답(국토교통부 질의회신)의 결론과 같은가",
+    formula: `<div style="display:flex;align-items:center;gap:10px"><b class="cy" style="font-size:20px">C</b> =<div style="text-align:center;font-size:15.5px;line-height:1.35"><div style="border-bottom:1.5px solid var(--ink);padding-bottom:3px">정답으로 판정된 문항 수</div><div style="padding-top:3px">판정한 문항 수</div></div></div>`,
+    how: "판정 주체는 언어모델 판정기(LLM-as-a-Judge). 같은 판정 모델 · 같은 추론 강도로 두 회 판정해 평균한다",
+    example: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <div class="a-rise" ${d(.5)} style="padding:10px 12px;border:1px solid #2c4a74;border-radius:8px"><div class="mono mu2" style="font-size:12px">정답 · 질의회신</div><div style="font-size:15.5px;margin-top:4px;line-height:1.45">결론: <b>허용된다</b><br><span class="mu" style="font-size:13.5px">근거: ○○법 제△조</span></div></div>
+      <div class="a-rise" ${d(.7)} style="padding:10px 12px;border:1px solid #2c4a74;border-radius:8px"><div class="mono mu2" style="font-size:12px">시스템의 답</div><div style="font-size:15.5px;margin-top:4px;line-height:1.45">결론: <b>허용된다</b><br><span class="mu" style="font-size:13.5px">근거: ○○법 제△조</span></div></div></div>
+    <div class="a-fade" ${d(.9)} style="margin-top:12px;font-size:14.5px;color:var(--mu)">판정기가 결론의 방향과 근거를 맞대어 등급을 매김</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:8px;margin-top:8px">
+      <div class="a-pop" ${d(1.0)} style="padding:10px 12px;border-radius:6px;border:1.5px solid var(--cy);background:rgba(79,209,232,.12)"><div class="mono cy" style="font-size:18px;font-weight:700">A · B 등급 → 정답</div><div style="font-size:13px;color:var(--mu);line-height:1.4;margin-top:3px">결론의 방향과 근거가 함께 일치 · 표현의 강도만 다른 경우 포함</div></div>
+      <div class="a-pop" ${d(1.15)} style="padding:10px 12px;border-radius:6px;border:1.5px solid #3a4a68"><div class="mono" style="font-size:18px;font-weight:700;color:var(--dim)">그 밖 → 오답</div><div style="font-size:13px;color:var(--mu);line-height:1.4;margin-top:3px">정답 판정에 들지 않은 문항</div></div></div>
+    <div class="a-rise" ${d(1.7)} style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:16px;line-height:1.5">두 회 판정 평균으로 300문항 가운데 195문항이 정답이면<br>C = 195 ÷ 300 = <b class="mono cy">65.00%</b> <span class="mu" style="font-size:13px">(이번 서비스 설정 값)</span></div>`,
+    cautionTitle: "판정기가 값을 움직인다", caution: ["같은 2025년 답을 판정기만 바꿔 재면 13.1~15.7점 차이 → 같은 판정기로 다시 잰 베이스라인과만 비교", "판정 기준을 새로 세운 판정기로 재면 84.7%(271문항 분모) — 다음 장면", "생성만 다시 해도 개발 50문항에서 5문항이 움직임"],
+    vnote: "정본 판정기, 별도 표본 300문항 · 2025년 저장 답 38.33% → 올해 65.00% · <b class=\"warn\">최종 값은 전문가 검증 뒤 확정</b>",
+    key: "C는 <b class=\"cy\">결론</b>이 맞는지를 잰다 — 판정기와 판정 기준이 값을 움직이므로 <b class=\"warn\">C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정한다</b>" }) });
+
+add({ ch: 4, ref: "4장 1절 · 3절 2) 102–114쪽", sub: [
+  "셋째 지표 T, 시점별 검색 정확도입니다. 언제 기준인지가 정해진 질의에서, 답이 근거로 든 조문의 판이 그 시점에 시행되던 판인지를 봅니다.",
+  "판정은 법령 식별자와 시행일자의 쌍이 정답 판과 같은지로 합니다. 판정 모델을 쓰지 않으므로 누가 재도 같은 값이 나옵니다.",
+  "정답 판은 시스템이 적재한 데이터가 아니라 법제처 원천에서 미리 계산해 고정합니다. 시스템 데이터로 정답을 만들면 시스템이 틀릴 때 정답도 함께 틀려 오류가 드러나지 않기 때문입니다.",
+  "운영 서비스의 T는 74.29%로, 35문항 중 26문항이 맞았습니다. 틀린 9문항은 모두 정답 조문을 제시했지만 어느 시점의 판인지 밝히지 않았습니다."],
+  html: metric({ k: "T", name: "시점별 검색 정확도", goal: 95, col: "var(--bad)", v: "74.29", title: "T는 어떻게 세나 — 그 시점에 시행되던 판인가",
+    q: "기준 시점이 정해진 질의에서, 답이 근거로 든 조문의 <b class=\"cy\">판</b>이 그 시점에 시행되던 판인가",
+    formula: `<div style="display:flex;align-items:center;gap:10px"><b class="cy" style="font-size:20px">T</b> =<div style="text-align:center;font-size:15px;line-height:1.35"><div style="border-bottom:1.5px solid var(--ink);padding-bottom:3px">근거 판이 정답 판과 일치한 문항 수</div><div style="padding-top:3px">시점이 정해지고 정답 조문을 제시한 문항 수</div></div></div>`,
+    how: "일치 = <b>법령 식별자 + 시행일자</b> 쌍이 같음. 판정 모델 없이 결정적으로 판정한다",
+    example: `<div style="margin-top:12px;font-size:15px">질의: 「<b class="cy">2015년 당시</b> 기준으로 ○○법 제△조에 따르면…」</div>
+    <div style="position:relative;height:120px;margin-top:14px">
+      <div style="position:absolute;left:10px;right:10px;top:40px;height:2px;background:#2c5a8a"></div>
+      ${[["판 1", "2012. 시행", 10], ["판 2", "2016. 시행", 52], ["판 3", "2021. 시행", 82]].map((p, i) => `<div class="a-pop" ${d(.5 + i * .15)} style="position:absolute;left:${p[2]}%;top:16px;transform:translateX(-50%);text-align:center"><div class="mono" style="font-size:13px;font-weight:700;padding:3px 8px;border-radius:4px;border:1.5px solid ${i === 0 ? "var(--cy)" : "#3a4a68"};background:${i === 0 ? "rgba(79,209,232,.15)" : "var(--bg0)"}">${p[0]}</div><div class="mu2" style="font-size:12px;margin-top:22px">${p[1]}</div></div>`).join("")}
+      <div class="a-fade" ${d(1)} style="position:absolute;left:38%;top:0;bottom:30px;border-left:2px dashed var(--warn)"></div>
+      <div class="a-fade" ${d(1)} style="position:absolute;left:38%;bottom:0;transform:translateX(-50%);font-size:13px;color:var(--warn);white-space:nowrap">질의 시점 2015</div></div>
+    <div class="a-fade" ${d(1.1)} style="font-size:14.5px;color:var(--mu)">정답 판 = 2015년에 시행 중이던 <b class="cy">판 1</b> (법제처 원천에서 계산)</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+      ${[["답의 근거: 판 1(2012. 시행)", 1, "맞음"], ["답의 근거: 판 3(현행)", 0, "틀림"], ["답의 근거: 조문은 맞으나 판을 밝히지 않음", 0, "틀림"]].map((r, i) => `<div class="a-rise" ${d(1.3 + i * .15)} style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;border:1px solid ${r[1] ? "var(--cy)" : "rgba(255,122,102,.5)"};font-size:14.5px"><span>${r[0]}</span><b style="color:${r[1] ? "var(--cy)" : "var(--bad)"}">${r[2]}</b></div>`).join("")}</div>`,
+    cautionTitle: "분모와 누출 방지", caution: ["정답 판은 시스템 적재 데이터가 아닌 법제처 원천에서 미리 계산해 고정", "분모 = 질의 시점이 정해진 37문항 중 정답 조문을 제시한 문항(서비스 35) — 작아서 95% 구간 57.9~85.8", "도구 단계 본문 일치 99.1%와 다른 값: T는 답이 그 판을 근거로 남겼는지를 봄"],
+    vnote: "26/35, 2026. 11. 7. · 틀린 9문항은 모두 판을 밝히지 않음 · 시험 설정 100.0%(36/36)",
+    key: "T는 <b class=\"cy\">답이 옳은 판을 근거로 남겼는지</b>를 잰다 — 시점 조회 기능을 갖추는 것과 답이 그 기능을 거치는 것은 별개" }) });
+
+add({ ch: 4, ref: "4장 1절 102쪽", sub: [
+  "세 지표는 서로 다른 단계를 봅니다. S는 근거를 찾아오는 검색, C는 결론, T는 근거의 시점입니다.",
+  "기관 경영목표의 결과지표와 연결하기 위해 세 값의 평균을 함께 냅니다. 운영 서비스에서 78.33, 65.00, 74.29의 평균은 72.54입니다."],
+  html: (s) => {
+  const P = [["S", "검색", "근거를 찾아왔나", "78.33", "var(--cy)"], ["C", "결론", "결론이 맞나", "65.00", "var(--warn)"], ["T", "시점", "옳은 판을 근거로 남겼나", "74.29", "var(--bad)"]];
+  return `<div class="slide">${hd(s, "세 지표는 답이 만들어지는 서로 다른 단계를 본다")}
+  <div style="position:absolute;left:60px;right:60px;top:128px;display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:center">
+    ${P.map((p, i) => `<div class="pn a-pop" ${d(.2 + i * .3)} style="position:relative;padding:18px 20px;height:230px;text-align:center">
+      <div class="mono glow" style="font-size:44px;font-weight:700;color:${p[4]}">${p[0]}</div><div style="font-size:24px;font-weight:900;margin-top:4px">${p[1]}</div>
+      <div class="mu" style="font-size:16px;margin-top:6px">${p[2]}</div>
+      <div style="margin-top:16px"><span class="mono num" style="font-size:34px;font-weight:700;color:${p[4]}" data-count="${p[3]}">${p[3]}</span><span style="color:${p[4]}">%</span></div></div>${i < 2 ? `<svg width="40" height="20"><path class="a-draw" ${d(.4 + i * .3)} style="--len:40" d="M4 10 H34 M27 4 L34 10 L27 16" stroke="#4fd1e8" stroke-width="2.4" fill="none"/></svg>` : ""}`).join("")}</div>
+  <div class="a-wipe" ${d(1.3)} style="position:absolute;left:60px;right:60px;top:394px;display:flex;align-items:center;gap:24px;padding:18px 26px;border:1px solid var(--line);border-radius:10px;background:var(--panel)">
+    <span style="font-size:18px;white-space:nowrap">세 지표 평균</span><span class="mono" style="font-size:22px;white-space:nowrap">(S + C + T) ÷ 3</span><span class="mono mu2" style="font-size:17px;white-space:nowrap">= (78.33 + 65.00 + 74.29) ÷ 3 =</span><span class="mono num glow" style="font-size:40px;font-weight:700;color:var(--bad)">72.54</span><span class="mu" style="margin-left:auto;font-size:15px">목표 80 · 기관 경영목표<br>「건축법령 AI 시스템 정확도」</span></div>
+  <div class="note a-fade" ${d(1.6)} style="top:530px"><span class="k">NOTE</span><span>평균은 정본 판정기의 C로 산출 · 시험 설정의 평균 84.50은 확증 전이라 판정에 쓰지 않음</span></div>
+  </div>`; } });
+
+/* 19 목표 대비 결과 */
+add({ ch: 4, ref: "4장 2절 2) 108–109쪽", sub: [
+  "목표 대비 결과입니다. 판정은 운영 중인 서비스 설정으로 합니다.",
+  "법령 검색 성공률은 78.33%로 목표를 넘어 달성했습니다. 시점별 정확도와 세 지표 평균은 운영 서비스에서 미달이고, 시험 설정에서는 목표를 넘었습니다.",
+  "정답 일치율은 같은 답을 어느 기준으로 채점하느냐에 따라 65.00과 84.7로 갈립니다. C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정합니다.",
+  "시험 설정은 확증 전이고 생성 비용이 약 22배여서 판정에 쓰지 않았습니다."],
+  html: (s) => {
+  const K = [["S", "법령 검색 성공률", 78.33, 75, "달성", "#4fd1e8", "시험 86.68"], ["T", "시점별 검색 정확도", 74.29, 95, "미달", "#ff7a66", "시험 100.0"], ["평균", "세 지표 평균", 72.54, 80, "미달", "#ff7a66", "시험 84.50"], ["C", "전체 정답 일치율", 65.00, 85, "판정 보류", "#f4b740", "전문가 검증 뒤 확정"]];
+  return `<div class="slide">${hd(s, "성과지표의 목표 대비 결과 — 별도 표본 300문항, 2026. 11. 7.")}
+  <div style="position:absolute;left:60px;right:60px;top:120px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px">${K.map((k, i) => `<div class="pn a-rise" ${d(.1 + i * .12)} style="position:relative;padding:16px 16px 14px;display:flex;flex-direction:column;align-items:center">
+    <div style="align-self:flex-start;display:flex;gap:8px;align-items:baseline"><span class="mono cy" style="font-weight:700">${k[0]}</span><span style="font-size:17px;font-weight:700">${k[1]}</span></div>
+    <div style="position:relative;width:212px;height:212px;margin-top:8px">${ringG(k[2], k[3], k[5], 90, 16, .3 + i * .12)}
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="white-space:nowrap"><span class="mono num" style="font-size:40px;font-weight:700;color:${k[5]};text-shadow:0 0 14px ${k[5]}" data-count="${k[2].toFixed(2)}">${k[2].toFixed(2)}</span><span style="color:${k[5]};font-size:18px">%</span></span><span style="font-size:14px;color:#8aa0c2">목표 ${k[3]} ○</span></div></div>
+    <div class="a-stamp" ${d(1.3 + i * .15)} style="margin-top:8px;font-weight:900;font-size:20px;color:${k[5]};border:2.5px solid ${k[5]};padding:2px 14px;border-radius:4px;transform:rotate(-4deg)">${k[4]}</div>
+    <div class="mono mu" style="font-size:13px;margin-top:10px">${k[6]}</div></div>`).join("")}</div>
+  <div class="pn a-fade" ${d(1.6)} style="left:60px;top:470px;width:1160px;height:84px;padding:12px 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:15.5px;line-height:1.5;color:#c4d2e6">
+    <div>판정은 <b>운영 중인 서비스 설정</b>으로 함 · 시험 설정 = 더 강한 판단 모델과 자치법규 · 연혁 추적, 시점 반영 기능을 더한 설정(생성 비용 약 22배 · 응답 시간 약 1.7배)</div>
+    <div>인용 품질 3종(목표 100% 유지) · 조례 참조 응답시간(목표 3초 이내)은 <b class="warn">남은 기간 측정</b> · 흰 점은 목표 위치</div></div>
+  <div class="note a-fade" ${d(1.8)} style="top:572px"><span class="k">NOTE</span><span>C는 채점 기준에 따라 <b class="warn">65.00과 84.7</b>로 갈린다(시험 66.83) — <b class="warn">C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정하고</b>, 그때 달성 여부를 판단</span></div>
+  </div>`; } });
+
+/* 19-1 정답 일치율 C가 갈리는 이유(정본 · 새 기준 · 조정) — 결정 11.08., 박사님 */
+add({ ch: 4, ref: "4장 2절 2)·3) 108–110쪽", sub: [
+  "정답 일치율은 같은 답이라도 어떤 판정 기준으로 채점하느냐에 따라 크게 달라집니다.",
+  "운영 서비스의 답을 정본 판정기로 재면 65.00, 판정 기준을 새로 세운 판정기로 재면 84.7입니다. 새 기준은 회신이 결론을 낸 271문항이 분모이고, 같은 분모의 정본 값은 65.13입니다.",
+  "두 기준이 갈린 문항만 답의 출처를 가린 채 다시 판정한 조정 값은 65.00에서 66.00으로, 정본과 1점 이내였습니다.",
+  "판정자는 갈린 문항 대부분을 가리지 못했고, 두 답의 자리를 바꾸어도 판정이 유지되는 비율이 0.52로 미리 정한 문턱 0.85에 못 미쳤습니다.",
+  "그래서 새 기준의 값과 조정 값은 보고값으로만 적습니다. C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정하고, 85% 달성 여부도 그때 판단합니다."],
+  html: (s) => {
+  const X0 = 30, X1 = 100, W = 640, px = (v) => ((v - X0) / (X1 - X0) * W).toFixed(1);
+  const rows = [
+    ["서비스 설정", "운영 중", [[65.00, "정본", "300문항"], [65.13, "정본", "271"], [84.7, "새 기준", "271"]], [65.00, 66.00], "갈린 44문항"],
+    ["시험 설정", "확증 전", [[66.83, "정본", "300문항"], [70.48, "정본", "271"], [93.4, "새 기준", "271"]], [66.83, 67.83], "갈린 19문항"],
+    ["2025 저장 답", "같은 판정기", [[40.22, "정본", "271"], [69.6, "새 기준", "271"]], null, "갈린 85문항"]];
+  const ticks = [30, 40, 50, 60, 70, 80, 90, 100];
+  return `<div class="slide">${hd(s, "정답 일치율 C가 판정 기준에 따라 갈리는 이유")}
+  <div class="pn a-fade" ${d(.1)} style="left:60px;top:120px;width:770px;height:418px;padding:16px 20px">
+    <div style="display:flex;gap:18px;align-items:center;font-size:14px;color:var(--mu)"><span class="lab">같은 답 · 세 가지 채점</span>
+      <span><i style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#e6eef8;margin-right:5px"></i>정본 판정기</span>
+      <span><i style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--warn);margin-right:5px"></i>새 기준(271문항 분모)</span>
+      <span><i style="display:inline-block;width:18px;height:8px;border-radius:4px;background:var(--cy);margin-right:5px;vertical-align:1px"></i>조정 값</span></div>
+    <div style="position:absolute;left:${20 + 90}px;top:62px;width:${W}px;height:300px">
+      ${ticks.map((t) => `<div style="position:absolute;left:${px(t)}px;top:0;bottom:22px;border-left:1px solid ${t === 85 ? "transparent" : "#1a2c49"}"></div><div class="mono mu2" style="position:absolute;left:${px(t)}px;bottom:0;transform:translateX(-50%);font-size:12px">${t}</div>`).join("")}
+      <div class="a-fade" ${d(.3)} style="position:absolute;left:${px(85)}px;top:-6px;bottom:22px;border-left:2px dashed #e6eef8"></div>
+      <div class="mono a-fade" ${d(.3)} style="position:absolute;left:${px(85)}px;top:-22px;transform:translateX(-50%);font-size:12px;color:#e6eef8">목표 85</div>
+      ${rows.map((r, i) => { const y = 34 + i * 92; return `
+        <div style="position:absolute;left:0;right:0;top:${y}px;height:2px;background:#22385c"></div>
+        ${r[3] ? `<div class="a-grow" ${d(1.4 + i * .2)} style="position:absolute;left:${px(r[3][0])}px;top:${y - 6}px;width:${Math.max(6, px(r[3][1]) - px(r[3][0]))}px;height:14px;border-radius:7px;background:var(--cy);box-shadow:0 0 12px var(--cy)"></div>
+          <div class="mono a-fade" ${d(1.6 + i * .2)} style="position:absolute;left:${px(r[3][1])}px;top:${y - 30}px;margin-left:8px;font-size:12.5px;color:var(--cy);white-space:nowrap">조정 ${r[3][0].toFixed(2)}~${r[3][1].toFixed(2)}</div>` : ""}
+        ${r[2].map((p, j) => { const nb = p[1] === "새 기준"; return `<div class="a-pop" ${d(.5 + i * .2 + j * .15)} style="position:absolute;left:${px(p[0])}px;top:${y - 8}px;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:${nb ? "var(--warn)" : (p[2] === "271" ? "transparent" : "#e6eef8")};border:2.5px solid ${nb ? "var(--warn)" : "#e6eef8"};${nb ? "box-shadow:0 0 12px var(--warn)" : ""}"></div>
+          <div class="mono num a-fade" ${d(.7 + i * .2 + j * .15)} style="position:absolute;left:${px(p[0])}px;top:${j === 1 ? y + 14 : y - 32}px;transform:translateX(${j === 1 ? "-20%" : (j === 0 && r[3] ? "-100%" : "-50%")});font-size:${nb ? 17 : 14}px;font-weight:700;white-space:nowrap;color:${nb ? "var(--warn)" : "#e6eef8"}">${p[0].toFixed(2).replace(/0$/, p[0] % 1 === 0 ? "0" : "")}</div>`; }).join("")}`; }).join("")}
+    </div>
+    <div style="position:absolute;left:20px;top:62px;width:90px;height:300px">${rows.map((r, i) => `<div class="a-rise" ${d(.3 + i * .15)} style="position:absolute;top:${20 + i * 92}px;line-height:1.3"><div style="font-size:15px;font-weight:700">${r[0]}</div><div class="mu2" style="font-size:12px">${r[1]}</div><div class="mono mu2" style="font-size:11px">${r[4]}</div></div>`).join("")}</div>
+    <div class="mu" style="position:absolute;left:20px;right:20px;bottom:12px;font-size:13.5px">빈 원 = 같은 271문항 분모의 정본 값 · 조정 = 두 기준이 갈린 문항만 답의 출처를 가린 채 다시 판정, 300문항 분모</div></div>
+  <div class="pn a-rise" ${d(.6)} style="left:850px;top:120px;width:370px;height:250px;padding:16px 20px;border-color:rgba(244,183,64,.45)">
+    <div class="lab" style="color:var(--warn)">조정 판정기의 신뢰도</div>
+    <div class="mu" style="font-size:14.5px;margin-top:10px;line-height:1.45">두 답의 자리를 바꾸어도 판정이 유지되는 비율</div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-top:6px"><span class="mono num warn" style="font-size:46px;font-weight:700" data-count="0.52">0.52</span><span class="mu">문턱</span><span class="mono" style="font-size:24px;font-weight:700">0.85</span></div>
+    <div class="bar" style="height:14px;margin-top:10px"><i class="a-grow" ${d(1)} style="width:52%;background:linear-gradient(90deg,#6b5320,#f4b740);box-shadow:0 0 10px rgba(244,183,64,.5)"></i><span style="position:absolute;left:85%;top:-5px;bottom:-5px;border-left:2px dashed #e6eef8"></span></div>
+    <div class="a-stamp" ${d(1.5)} style="display:inline-block;margin-top:14px;font-weight:900;font-size:17px;color:var(--warn);border:2.5px solid var(--warn);padding:2px 12px;border-radius:4px;transform:rotate(-3deg)">관문 미통과</div></div>
+  <div class="pn a-rise" ${d(.8)} style="left:850px;top:386px;width:370px;height:152px;padding:14px 20px">
+    <div class="lab">개발 50문항 · 두 회사 판정 모델 조정</div>
+    <div style="margin-top:8px;font-size:15px">조정 C <span class="mono num" style="font-size:20px;font-weight:700">0.64~0.92</span> <span class="mu2" style="font-size:12px">보고값</span></div>
+    <div class="mu" style="font-size:14px;margin-top:6px;line-height:1.45">미리 정한 일치도 조건을 넘지 못했고, 조정 칸 일부가 같은 회사 판정 모델로 넘어가 독립성도 지켜지지 않음</div></div>
+  <div class="note a-fade" ${d(1.8)} style="top:556px"><span class="k">결론</span><span>새 기준 값과 조정 값은 <b class="warn">판정 기준 확정 전 보고값</b> — <b class="warn">C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정하고</b>, 85% 달성 여부도 그때 판단</span></div>
+  </div>`; } });
+
+/* 20 읽을 것 */
+add({ ch: 4, ref: "4장 2절 2) 109–110쪽", sub: [
+  "측정에서 읽을 것은 네 가지입니다. 시험 설정의 이득은 대부분 검색 성공률과 시점 정확도에서 나왔고, 정답 일치율 차이는 1.83점에 그쳤습니다.",
+  "같은 판정기로 2025년 답과 비교하면 정답 일치율은 1년 사이 38.33에서 65.00으로 올랐습니다.",
+  "오답의 98%가 정답 조문을 근거로 냈습니다. 남은 과제는 검색보다 결론을 맺는 단계에 있을 가능성이 큽니다.",
+  "다만 작은 표본은 생성만 다시 해도 10점이 움직이므로 확증 측정에서 다시 봅니다."],
+  html: (s) => {
+  const K = [["11.96", "점", "시험 − 서비스 평균 차이", "대부분 S(8.35점)와 T(25.71점)에서 나옴 · C 차이는 1.83점"], ["38.33 → 65.00", "", "정답 일치율 1년 사이 변화", "같은 판정기로 잰 2025년 저장 답 대비 올해 서비스 설정(새 기준 · 271문항 분모로는 69.6 → 84.7)"],
+    ["98", "%", "오답 중 정답 조문을 제시한 비율", "개발 50문항 7회 생성의 오답 214건 중 210건(판정 기준 재정립 전)"], ["62.78 ↔ 72.96", "", "생성만 다시 했을 때 평균", "개발 50문항, 같은 서비스 설정 — 작은 표본의 흔들림, 확증 측정에서 다시 봄"]];
+  return `<div class="slide">${hd(s, "측정에서 읽을 것 — 남은 과제가 결론 단계에 있을 가능성")}
+  <div style="position:absolute;left:60px;right:60px;top:122px;display:grid;grid-template-columns:1fr 1fr;gap:16px">${K.map((k, i) => `<div class="pn a-rise" ${d(.15 + i * .15)} style="position:relative;padding:18px 22px;height:196px;${i === 2 ? "border-color:var(--cy);box-shadow:0 0 22px rgba(79,209,232,.2)" : ""}">
+    <div style="white-space:nowrap"><span class="mono num glow" style="font-size:44px;font-weight:700"${/^[\d.]+$/.test(k[0]) ? ` data-count="${k[0]}"` : ""}>${k[0]}</span><span class="cy" style="font-size:20px;margin-left:4px">${k[1]}</span></div>
+    <div style="font-size:19px;font-weight:700;margin-top:8px">${k[2]}</div><div class="mu" style="font-size:15px;margin-top:6px;line-height:1.5">${k[3]}</div></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1)} style="top:560px"><span class="k">NOTE</span><span>결론 단계의 몫과 판정 기준의 몫은 정본 판정 기준을 확정한 뒤 가린다(C는 판정 기준 재정립 전 값)</span></div>
+  </div>`; } });
+
+/* 21 1차 목표와 시범 운영 */
+add({ ch: 4, ref: "4장 3절 3)·5절 114–115·119–120쪽", sub: [
+  "1차 목표는 옛 설정에서 다섯 조건을 모두 충족했으나, 운영 설정을 바꾼 뒤 다시 재니 조건 4만 충족했습니다.",
+  "수리 기능을 켠 시험 조건에서 개선되었고, 운영 반영 뒤 운영 조건에서 다시 판정합니다.",
+  "관측 장치가 온전히 돈 9~10월의 가용률은 97.74%이고, 중단 시간의 69%가 사흘에 몰렸습니다."],
+  html: (s) => {
+  const tl = [["9. 13.", "옛 서비스 설정", "다섯 조건 모두 충족", "#4fd1e8"], ["10. 30.", "운영 설정 전환 뒤", "조건 4만 충족", "#ff7a66"], ["11. 1.", "수리 기능 · 시험 조건", "판 단위 · 조례 연계 개선", "#4fd1e8"], ["남은 기간", "운영 반영 판단 뒤", "운영 조건 재판정", "#5f7393"]];
+  const av = [["6월", 99.86], ["7월", 99.62], ["8월", 99.86], ["9월", 97.21], ["10월", 98.26]];
+  return `<div class="slide">${hd(s, "1차 목표의 재판정과 시범 운영 · 모니터링")}
+  <div class="lab a-fade" ${d(.1)} style="position:absolute;left:60px;top:122px">1차 목표 — 시점 · 지역 기능을 조건별로 확인</div>
+  <svg style="position:absolute;left:60px;top:154px" width="600" height="30"><path class="a-draw" ${d(.2)} style="--len:520" d="M60 14 H540" stroke="#2c5a8a" stroke-width="2"/></svg>
+  <div style="position:absolute;left:60px;top:150px;width:600px;display:grid;grid-template-columns:repeat(4,1fr)">${tl.map((t, i) => `<div class="a-rise" ${d(.3 + i * .18)} style="display:flex;flex-direction:column;align-items:center;text-align:center">
+    <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:${t[3]};box-shadow:0 0 12px ${t[3]}"></span><span class="mono" style="font-size:15px;font-weight:700;color:${t[3]};margin-top:10px">${t[0]}</span>
+    <span class="mu" style="font-size:13.5px;margin-top:4px">${t[1]}</span><span style="font-size:15.5px;font-weight:700;margin-top:4px;line-height:1.35">${t[2]}</span></div>`).join("")}</div>
+  <div class="pn a-rise" ${d(1)} style="left:60px;top:322px;width:600px;height:150px;padding:14px 20px"><div class="lab">판 단위 조회 · 11. 1. · 서비스 설정 → 시험 조건</div>
+    ${[["법령", 378, 423, 432], ["행정규칙", 142, 155, 159]].map((r, i) => `<div style="display:grid;grid-template-columns:90px 1fr 150px;gap:12px;align-items:center;margin-top:14px"><span style="font-size:16px">${r[0]}</span>
+      <div class="bar"><i style="width:${(r[1] / r[3] * 100).toFixed(1)}%;background:#2c3e5c;box-shadow:none"></i><i class="a-grow" ${d(1.2 + i * .15)} style="width:${(r[2] / r[3] * 100).toFixed(1)}%;opacity:.9"></i></div>
+      <span class="mono num" style="text-align:right"><span class="mu2">${r[1]}</span> → <b class="cy">${r[2]}</b><span class="mu2">/${r[3]}</span></span></div>`).join("")}</div>
+  <div class="a-wipe" ${d(1.4)} style="position:absolute;left:60px;top:494px;width:600px;font-size:19px;font-weight:700;border-left:4px solid var(--cy);padding:6px 0 6px 18px">시스템이 바뀌면 이전에 충족으로 본 판정도 다시 내린다</div>
+  <div class="pn a-rise" ${d(.5)} style="left:690px;top:122px;width:530px;height:350px;padding:16px 20px"><div class="lab">서비스 가용률(%)</div>
+    <div style="display:flex;gap:18px;height:220px;margin-top:14px;align-items:flex-end;position:relative">${av.map((a, i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%">
+      <span class="mono num" style="font-size:15px;color:${a[1] < 98 ? "var(--warn)" : "#c4d2e6"}">${a[1].toFixed(2)}</span>
+      <div class="a-bar" ${d(.8 + i * .1)} style="width:100%;height:${Math.round((a[1] - 95) / 5 * 170)}px;border-radius:3px 3px 0 0;background:linear-gradient(${i >= 3 ? "var(--cy),var(--cy2)" : "#3a5a80,#1d3150"});${i >= 3 ? "box-shadow:0 0 12px rgba(79,209,232,.35)" : ""}"></div>
+      <span class="mu" style="font-size:14px">${a[0]}</span></div>`).join("")}</div>
+    <div class="mono mu2" style="font-size:12px;margin-top:8px">세로축 95~100 · 6~8월은 관측 장치 도입(8. 10.) 전이라 중단이 적게 기록되었을 수 있음</div></div>
+  <div class="pn a-rise" ${d(1.2)} style="left:690px;top:488px;width:530px;height:66px;padding:0 20px;display:flex;align-items:center;gap:16px">
+    <span class="mu" style="font-size:15px">9~10월 61일</span><span class="mono num cy glow" style="font-size:30px;font-weight:700" data-count="97.74">97.74</span><span class="cy">%</span><span class="mu" style="font-size:14px;margin-left:auto">연구기간 98.97% · 중단 69%가 사흘(9. 5. · 9. 8. · 10. 15.)</span></div>
+  </div>`; } });
+
+/* Ⅴ */
+add({ ch: 5, chap: true, dur: 4.5, sub: ["다섯째, 정책 제안과 남은 과제입니다."], html: chCard(5, "정책 제안과 남은 과제", ["정책 제안 여덟 가지", "향후 정책 사업 로드맵", "연구의 한계와 남은 기간의 수행 계획", "후속 과제 — 국가 법령 통합 서비스"]) });
+
+/* 22 정책 제안 */
+add({ ch: 5, ref: "5장 2절 127–133쪽", sub: [
+  "정책 제안은 여덟 가지입니다.",
+  "첫째, 법률 AI 서비스의 확산 조건으로 답의 근거·시점·지역을 확인할 수 있게 하고 정확도를 재어 공개하는 것입니다.",
+  "이어서 판정 가능 범위의 공개, 지표 정의의 선행 공표, 데이터 인프라의 선행 정비, 모델 전환 시 재측정 원칙, AI 기본법 대응을 제안합니다.",
+  "그리고 AI 민생 10대 프로젝트의 인허가 사전진단 서비스 등 건축행정 AI 사업과의 연계, 신뢰성 평가와 제3자 검증입니다."],
+  html: (s) => {
+  const P = [["법률 AI 서비스의 확산 조건", "답의 근거 · 시점 · 지역을 확인할 수 있게 하고 그 정확도를 재어 공개"], ["판정 가능 범위의 공개", "자동 판정 대상과 사람의 심사 전속을 목록으로 공개"],
+    ["성과지표 정의의 선행 공표", "측정 대상 · 모집단 · 기준시점을 수치와 함께 공표"], ["데이터 인프라의 선행 정비", "자치법규 표준 식별자 · 시행시점 보존, 별표 · 서식의 판 단위 기계 판독"],
+    ["모델 전환과 재측정 원칙", "생성 · 판정 모델을 바꿀 때 같은 조건으로 다시 잼"], ["「인공지능 기본법」 대응", "투명성 · 감독 요건과 개인정보 보호를 서비스 설계에 반영"],
+    ["건축행정 AI 사업 · 법 개정 논의와의 연계", "통합인허가 사전진단 서비스 · 건축법 전부개정 논의에 데이터 정비 · 측정 절차를"], ["신뢰성 평가와 제3자 검증", "AI 법령정보 서비스의 공통 신뢰성 평가 기준과 제3자 성능 평가 체계"]];
+  return `<div class="slide">${hd(s, "정책 제안 여덟 가지")}
+  <div style="position:absolute;left:60px;right:60px;top:120px;display:grid;grid-template-columns:1fr 1fr;gap:12px 16px">${P.map((p, i) => `<div class="pn a-rise" ${d(.15 + i * .09)} style="position:relative;display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:12px 18px 12px 12px;height:100px;${i === 0 ? "border-color:var(--cy);box-shadow:0 0 22px rgba(79,209,232,.22)" : ""}">
+    <span class="mono glow" style="font-size:30px;font-weight:700;text-align:center;color:${i === 0 ? "var(--cy)" : "var(--ink)"}">${i + 1}</span>
+    <div><div style="font-size:19px;font-weight:700">${p[0]}</div><div class="mu" style="font-size:14.5px;margin-top:4px;line-height:1.45">${p[1]}</div></div></div>`).join("")}</div>
+  </div>`; } });
+
+/* 23 로드맵 */
+add({ ch: 5, ref: "5장 3절 134–135쪽", sub: [
+  "로드맵은 세 단계입니다. 단기 2026~2027년에는 근거·시점·지역 기능을 확증하고 운영에 정착시킵니다.",
+  "중기 2027~2028년에는 공간·건축물 정보를 연계하고 신청자료를 사전점검하며, 법제처 생성형 AI 법령검색과의 기능 연계를 협의합니다.",
+  "장기 2029년 이후에는 규칙엔진 사전검토와 제도화로 나아가고, 건축 밖 법령 분야로 확장을 실증합니다."],
+  html: (s) => {
+  const R = [["단기", "2026~2027", "근거 · 시점 · 지역 기능의 확증과 운영 정착", ["자치법규 · 과거 시점 판의 운영 정착, 별표 · 서식 구조화", "확증 측정과 정본 판정 기준 확정, 측정 절차 공표", "국토교통부 · 법제처 실무 협의, 지자체 담당자 패널", "통합인허가 사전진단 서비스와 데이터 · 평가 연계"]],
+    ["중기", "2027~2028", "공간 · 건축물 정보 연계와 신청자료 사전점검", ["공간정보 · 건축물 정보 연계", "신청자료 기재사항 사전점검, 위치 기반 규제 확인", "자치법규 식별자 · 시행시점 보존 체계 정비", "법제처 생성형 AI 법령검색과의 기능 연계 협의", "자동판정 목록 시범 · 제3자 성능 평가 시범"]],
+    ["장기", "2029~", "규칙엔진 사전검토와 제도화", ["인허가 신청자료 · 도면과 BIM", "결정론적 요건의 규칙엔진 사전검토(세움터 연계), 재량 판단은 사람의 심사", "건축 밖 법령 분야로 시점 · 지역 · 근거 기능 확장 실증", "신뢰성 인증 체계 · 성과지표 기준 정립"]]];
+  return `<div class="slide">${hd(s, "향후 정책 사업 로드맵")}
+  <svg style="position:absolute;left:60px;top:130px" width="1160" height="24"><defs><marker id="ar23" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4fd1e8"/></marker></defs>
+    <path class="a-draw" ${d(.1)} style="--len:1160;filter:drop-shadow(0 0 4px #4fd1e8)" d="M4 12 H1150" stroke="#4fd1e8" stroke-width="3" marker-end="url(#ar23)"/></svg>
+  <div style="position:absolute;left:60px;right:60px;top:122px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px">${R.map((r, i) => `<div class="a-rise" ${d(.3 + i * .25)}>
+    <div style="display:flex;align-items:center;gap:10px"><span style="width:18px;height:18px;border-radius:50%;background:var(--bg0);border:3px solid var(--cy);box-shadow:0 0 10px var(--cy)"></span></div>
+    <div style="margin-top:18px;display:flex;align-items:baseline;gap:12px"><span style="font-size:30px;font-weight:900">${r[0]}</span><span class="mono cy" style="font-size:16px">${r[1]}</span></div>
+    <div style="font-size:17px;font-weight:700;color:#c4d2e6;margin-top:4px;min-height:50px">${r[2]}</div>
+    <div class="pn" style="position:relative;padding:14px 16px;height:270px;margin-top:8px"><ul class="li" style="gap:9px">${r[3].map((t) => `<li style="font-size:15px">${t}</li>`).join("")}</ul></div></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1.3)} style="top:574px;font-size:15px"><span class="k">원칙</span><span>투자 순서(성숙한 국가 법령 데이터엔 검증 인프라, 미성숙한 조례 데이터엔 데이터 인프라부터) · 세움터 연계는 결정론적 요건만 규칙엔진 · 재측정 뒤 모델 선택 · 수요가 확인되면 기계 판독 인터페이스 개방</span></div>
+  </div>`; } });
+
+/* 24 한계와 남은 기간 */
+add({ ch: 5, ref: "5장 4절 136–138쪽", sub: [
+  "연구의 한계를 그대로 말씀드립니다. 1차 목표를 운영 조건에서 충족하지 못했고, 확증 측정과 판정 기준 확정이 남아 있습니다.",
+  "성과지표 둘은 아직 재지 못했고, 자치법규 조문 층과 모델 비교, 의견수렴과 부처 협의도 남아 있습니다.",
+  "남은 기간에는 확증 측정과 판정 기준 확정을 먼저 하고, 운영 반영 판단 뒤 1차 목표를 다시 판정하며, 미측정 지표와 의견수렴, 협의를 수행합니다."],
+  html: (s) => {
+  const L = ["1차 목표를 운영 조건에서 충족하지 못함", "세 지표의 확증 측정 미완(생성 1회 · T 분모 35~36)", "정답 일치율 판정 기준 미확정", "성과지표 다섯 중 둘 미측정(인용 품질 · 조례 응답시간)", "자치법규 조문 층 보류(현행 종의 9.04% 보유)", "사례 원천 편중 · 개인정보 표지 사례 4.74% 보호 장치 보완", "국내 · 소버린 모델 비교 측정 유예", "자문회의 목표 6회 중 1회, 지자체 패널 · 부처 협의 미실시"];
+  const T = [["측정", "1,205문항 확증 측정, 정본 판정 기준 확정(전문가 판정)"], ["운영", "수리 기능의 운영 반영 판단 → 운영 조건 1차 목표 재판정"], ["미측정 지표", "조례 참조 응답시간 · 인용 품질 측정, 순이용자 산출"], ["자료", "국토안전관리원 연혁법령 자료 구득 · 법제처 원천과 대조"], ["의견수렴", "협회 회원 설문, 실무자 · 지자체 패널 시험 이용, 추가 자문 회차"], ["협의", "국토교통부 · 법제처 업무협의, 정책연구협의회"], ["보고서", "최종연심 의견 조치 → 최종보고서 평가 자료 제출(11. 19.)"]];
+  return `<div class="slide">${hd(s, "연구의 한계와 남은 기간(심의 뒤~12. 31.)의 수행 계획")}
+  <div class="pn a-rise" ${d(.15)} style="left:60px;top:122px;width:520px;height:430px;padding:18px 22px;border-color:rgba(255,122,102,.4)"><div class="lab" style="color:var(--bad)">연구의 한계</div>
+    <ul class="li w" style="margin-top:14px;gap:10px">${L.map((t, i) => `<li class="a-rise" ${d(.3 + i * .07)} style="font-size:16px">${t}</li>`).join("")}</ul></div>
+  <div style="position:absolute;left:610px;right:60px;top:122px"><div class="lab a-fade" ${d(.4)}>남은 기간에 할 일</div>
+    <div style="display:flex;flex-direction:column;margin-top:10px">${T.map((t, i) => `<div class="a-rise" ${d(.6 + i * .09)} style="display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;min-height:56px;border-bottom:1px solid var(--line)"><span class="cy" style="font-weight:700;font-size:16px">${t[0]}</span><span style="font-size:16px;line-height:1.45">${t[1]}</span></div>`).join("")}</div></div>
+  </div>`; } });
+
+/* 25 후속 과제 · 국가 법령 통합 서비스 */
+add({ ch: 5, ref: "5장 4절 137–138쪽", sub: [
+  "연구기간을 넘어서는 후속 과제는 다섯 가지이고, 그 다섯째는 국가 법령·행정규칙·자치법규 전반에서 근거·시점·지역을 확인하는 통합 서비스로 발전시키는 방안입니다.",
+  "본 연구가 갖춘 데이터 기반의 상당 부분은 건축 분야에 한정되지 않습니다. 현행 법령 5,631종과 행정규칙 22,709종 모두가 판 목록을 가지고 있습니다.",
+  "건축에 묶인 것은 관련성 판별 장치와 답변 지침, 사례 원천, 평가 표본입니다.",
+  "현행 조문의 안내는 법제처 서비스에 맡기고, 언제·어디의 규범이며 무엇을 근거로 삼았는지를 확인하는 기능을 기계가 읽을 수 있는 인터페이스로 제공하는 편이 중복을 줄이는 길이라고 봅니다."],
+  html: (s) => {
+  const F = ["결론 단계의 개선", "자치법규 조문 층 · 조례 시나리오 문항", "국내 초거대 · 기관 내부 배치 모델 비교", "판정 가능 범위 목록(인허가 요건 단위)"];
+  const D = [["169,604", "판", "법령 연혁"], ["151,010", "판", "행정규칙 연혁"], ["5,631 · 22,709", "종", "현행 법령 · 행정규칙 모두 판 목록 보유"], ["163,253", "건", "자치법규 명칭 · 전국 260 관할"], ["225,268", "건", "판례 · 해석례 등 사례 목록"]];
+  return `<div class="slide">${hd(s, "후속 과제 — 건축법령을 넘어 국가 법령 통합 서비스로")}
+  <div style="position:absolute;left:60px;top:122px;width:300px;display:flex;flex-direction:column;gap:8px">${F.map((f, i) => `<div class="a-rise" ${d(.1 + i * .08)} style="display:flex;gap:10px;align-items:center;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:rgba(17,31,54,.5)"><span class="mono mu2" style="font-size:14px">0${i + 1}</span><span style="font-size:15px;color:var(--mu)">${f}</span></div>`).join("")}
+    <div class="a-pop" ${d(.5)} style="display:flex;gap:10px;align-items:center;min-height:62px;padding:8px 14px;border:2px solid var(--cy);border-radius:8px;background:rgba(79,209,232,.12);box-shadow:0 0 22px rgba(79,209,232,.3)"><span class="mono cy" style="font-size:14px;font-weight:700">05</span><span style="font-size:16.5px;font-weight:700;line-height:1.35">국가 법령 · 행정규칙 · 자치법규 통합 서비스로 발전</span></div></div>
+  <div class="pn a-rise" ${d(.6)} style="left:390px;top:122px;width:830px;height:196px;padding:14px 20px"><div class="lab">이미 건축 밖까지 갖춘 데이터 기반 (2026. 10. 기준)</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px">${D.map((x, i) => `<div class="a-rise" ${d(.8 + i * .1)}><div style="white-space:nowrap"><span class="mono num glow" style="font-size:${x[0].length > 9 ? 20 : 28}px;font-weight:700">${x[0]}</span><span class="cy" style="font-size:14px;margin-left:3px">${x[1]}</span></div><div class="mu" style="font-size:13.5px;margin-top:6px;line-height:1.4">${x[2]}</div></div>`).join("")}</div>
+    <div style="font-size:14.5px;color:#c4d2e6;margin-top:14px;line-height:1.5">일일 개정 반영 · 시점 조회 · 조례 위임 연계 조회도 특정 법령 분야를 전제로 하지 않음 · <span class="warn">건축에 묶인 것</span>: 관련성 판별 장치와 답변 지침, 사례 원천(국토부 질의응답 93.9%), 평가 표본</div></div>
+  <div style="position:absolute;left:390px;top:336px;width:830px;height:200px">
+    <div class="pn a-rise" ${d(1.2)} style="left:0;top:0;width:330px;height:200px;padding:16px 18px"><div class="mono mu2" style="font-size:13px">법제처 생성형 AI 법령검색</div><div style="font-size:15px;color:var(--mu);margin-top:2px">2026. 6. 착수 · 2027. 7. 개통 목표</div>
+      <div style="font-size:20px;font-weight:700;margin-top:18px">현행 조문의 안내</div><div class="mu" style="font-size:14px;margin-top:6px;line-height:1.45">공개 계획은 현행 법령 중심 · 행정규칙 · 자치법규 · 과거 판 근거 답변은 확인되지 않음</div></div>
+    <svg style="position:absolute;left:338px;top:70px" width="150" height="60"><path class="a-draw" ${d(1.5)} style="--len:300" d="M4 20 H140 M130 12 L140 20 L130 28 M146 42 H10 M20 34 L10 42 L20 50" stroke="#4fd1e8" stroke-width="2.4" fill="none"/></svg>
+    <div class="a-fade" ${d(1.6)} style="position:absolute;left:338px;top:136px;width:150px;text-align:center;font-size:13px;color:var(--mu)">기계 판독<br>인터페이스로 연계</div>
+    <div class="pn a-rise" ${d(1.4)} style="left:496px;top:0;width:334px;height:200px;padding:16px 18px;border-color:var(--cy);box-shadow:0 0 22px rgba(79,209,232,.22)"><div class="mono cy" style="font-size:13px">ALRIS 기능 · 법령 분야 전반으로</div>
+      <div style="font-size:20px;font-weight:700;margin-top:22px;line-height:1.4">언제의 규범이며 어디에 적용되고 무엇을 근거로 삼았는지 확인</div><div class="mu" style="font-size:14px;margin-top:8px">시점 조회 · 조례 연계 · 사례 근거는 이미 운영 반영</div></div></div>
+  <div class="note a-fade" ${d(1.9)} style="top:556px;font-size:15.5px"><span class="k">NOTE</span><span>다른 분야로 넓히는 일은 그 분야 소관 기관의 질의회신으로 평가 표본을 세우고, 같은 지표와 재측정 원칙으로 실증하는 데서 시작 · 정확도는 확증 측정을 남겨 둠</span></div>
+  </div>`; } });
+
+/* 26 맺음 */
+add({ ch: 5, eb: "END", sub: ["감사합니다. 공개 시범 서비스는 alris.auri.re.kr에서 로그인 없이 쓰실 수 있습니다."], html: () => `<div class="slide ch">
+  <div class="mono a-fade cy" ${d(.1)} style="position:absolute;left:0;right:0;top:214px;text-align:center;font-size:16px;letter-spacing:.3em">ALRIS · FINAL REVIEW 2026</div>
+  <div class="a-wipe" ${d(.25)} style="position:absolute;left:0;right:0;top:250px;text-align:center;font-size:72px;font-weight:900;letter-spacing:-.02em">감사합니다</div>
+  <div class="a-grow" ${d(.7)} style="position:absolute;left:530px;top:370px;width:220px;height:3px;background:var(--cy);box-shadow:0 0 12px var(--cy);transform-origin:center"></div>
+  <div class="a-rise" ${d(.9)} style="position:absolute;left:0;right:0;top:396px;text-align:center;font-size:21px;color:var(--mu)">공개 (시범) 서비스 <b class="mono cy glow" style="font-size:24px;margin-left:8px">alris.auri.re.kr</b></div>
+  <div class="a-rise" ${d(1.1)} style="position:absolute;left:0;right:0;top:446px;text-align:center;font-size:17px;color:var(--mu2)">연구책임 조상규 선임연구위원 · 연구진 권오규 · 김신성 부연구위원 · 건축공간연구원</div>
+  </div>` });
+
+/* ════════════ 재생 엔진 ════════════ */
+const layer = document.getElementById("layer"), canvas = document.getElementById("canvas"), stage = document.getElementById("stage"), deck = document.getElementById("deck");
+const subEl = document.getElementById("sub"), RM = matchMedia("(prefers-reduced-motion: reduce)");
+let cur = -1, auto = false, timers = [];
+/* 장 진행 바 */
+const prog = document.getElementById("prog");
+const chStart = CH.map((_, c) => S.findIndex((x) => x.ch === c));
+const chCount = CH.map((_, c) => S.filter((x) => x.ch === c).length);
+prog.innerHTML = CH.map((c, i) => `<div class="seg" data-ch="${i}" title="${c}" style="flex:${chCount[i]}"><i></i></div>`).join("");
+prog.addEventListener("click", (e) => { const sg = e.target.closest(".seg"); if (sg) { stopAuto(); go(chStart[+sg.dataset.ch]); } });
+
+function prep(root) {
+  root.querySelectorAll("[data-d]").forEach((el) => el.style.setProperty("--d", el.dataset.d + "s"));
+  root.querySelectorAll("[data-count]").forEach((el) => { if (!el.dataset.final) el.dataset.final = el.textContent; });
+}
+function finalize(root) { root.querySelectorAll("[data-count]").forEach((el) => { el._tok = (el._tok || 0) + 1; el.textContent = el.dataset.final; }); }
+function countUp(root) {
+  root.querySelectorAll("[data-count]").forEach((el) => {
+    const fin = el.dataset.final, target = parseFloat(el.dataset.count), dec = ((fin.split(".")[1] || "").match(/^\d+/) || [""])[0].length;
+    const f = (v) => dec ? v.toFixed(dec) : Math.round(v).toLocaleString("ko-KR");
+    const delay = parseFloat(el.closest("[data-d]")?.dataset.d || 0) * 1000;
+    const tok = el._tok = (el._tok || 0) + 1, dur = 1300;
+    const done = () => { if (el._tok === tok) el.textContent = fin; };
+    setTimeout(() => {
+      if (el._tok !== tok) return; const t0 = performance.now();
+      const step = (now) => { if (el._tok !== tok) return; if (document.hidden) return done();
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        if (p < 1) { el.textContent = f(target * e); requestAnimationFrame(step); } else done(); };
+      el.textContent = f(0); requestAnimationFrame(step); setTimeout(done, dur + 400);
+    }, delay);
+  });
+}
+function play(sl) {
+  if (!sl) return; clearTimeout(sl._end); sl.classList.remove("play"); finalize(sl);
+  if (RM.matches || document.hidden) return;
+  void sl.offsetWidth; sl.classList.add("play"); countUp(sl);
+  sl._end = setTimeout(() => { sl.classList.remove("play"); finalize(sl); }, 4600);
+}
+function go(i) {
+  i = Math.max(0, Math.min(S.length - 1, i)); if (i === cur && layer.firstElementChild) return;
+  const old = layer.querySelector(".slide:not(.leave)");
+  if (old) { old.classList.remove("enter", "play"); old.classList.add("leave"); setTimeout(() => old.remove(), 460); }
+  cur = i; const sc = S[i];
+  const w = document.createElement("div"); w.innerHTML = sc.html(sc); const sl = w.firstElementChild;
+  layer.appendChild(sl); prep(sl);
+  if (!RM.matches) sl.classList.add("enter");
+  play(sl);
+  document.getElementById("ftc").textContent = CH[sc.ch];
+  document.getElementById("ftn").textContent = String(i + 1).padStart(2, "0") + " / " + S.length;
+  document.getElementById("pos").textContent = (i + 1) + " / " + S.length;
+  prog.querySelectorAll(".seg").forEach((sg, c) => { const st = chStart[c], n = chCount[c]; sg.firstElementChild.style.width = (i >= st + n ? 100 : i < st ? 0 : ((i - st + 1) / n * 100)) + "%"; });
+  try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) { location.hash = "s" + (i + 1); }
+  if (auto) runAuto();
+}
+/* 자동 재생: 해설 자막을 문장 단위로 띄우고 끝나면 다음 장면으로 */
+function clearT() { timers.forEach(clearTimeout); timers = []; }
+function runAuto() {
+  clearT(); const sc = S[cur], lines = sc.sub || [];
+  let t = sc.chap ? 500 : 1100;
+  subEl.hidden = false; subEl.innerHTML = "";
+  lines.forEach((ln) => {
+    const len = Math.max(2600, ln.length * 145);
+    timers.push(setTimeout(() => { subEl.innerHTML = `<span>${ln}</span>`; }, t)); t += len;
+  });
+  t += sc.chap ? 600 : 1400;
+  if (sc.dur) t = Math.max(t, sc.dur * 1000);
+  timers.push(setTimeout(() => { subEl.innerHTML = ""; if (cur < S.length - 1) go(cur + 1); else stopAuto(); }, t));
+}
+function startAuto() { auto = true; bAuto.setAttribute("aria-pressed", "true"); bAuto.textContent = "❚❚ 자동 재생 멈춤"; runAuto(); }
+function stopAuto() { auto = false; clearT(); subEl.hidden = true; subEl.innerHTML = ""; bAuto.setAttribute("aria-pressed", "false"); bAuto.textContent = "▶ 자동 재생(해설 자막)"; }
+const bAuto = document.getElementById("bAuto");
+bAuto.onclick = () => auto ? stopAuto() : startAuto();
+document.getElementById("bPrev").onclick = () => { stopAuto(); go(cur - 1); };
+document.getElementById("bNext").onclick = () => { stopAuto(); go(cur + 1); };
+document.getElementById("bReplay").onclick = () => play(layer.querySelector(".slide:not(.leave)"));
+const bFull = document.getElementById("bFull");
+function toggleFull() { try { if (document.fullscreenElement) document.exitFullscreen(); else deck.requestFullscreen().catch(() => {}); } catch (e) {} }
+bFull.onclick = toggleFull;
+/* 화면 맞춤 */
+function fit() {
+  const full = document.fullscreenElement === deck;
+  const aw = full ? innerWidth : deck.clientWidth, ah = full ? innerHeight : Math.max(200, innerHeight - 90);
+  const k = Math.min(aw / 1280, ah / 720);
+  stage.style.width = 1280 * k + "px"; stage.style.height = 720 * k + "px"; canvas.style.transform = `scale(${k})`;
+}
+addEventListener("resize", fit); document.addEventListener("fullscreenchange", fit);
+new ResizeObserver(fit).observe(deck);
+document.addEventListener("keydown", (e) => {
+  if (e.target.closest && e.target.closest("button, a") && (e.key === "Enter" || e.key === " ")) return;
+  const k = e.key;
+  if (k === "ArrowRight" || k === "PageDown" || k === "Enter") { e.preventDefault(); stopAuto(); go(cur + 1); }
+  else if (k === "ArrowLeft" || k === "PageUp" || k === "Backspace") { e.preventDefault(); stopAuto(); go(cur - 1); }
+  else if (k === "Home") { stopAuto(); go(0); } else if (k === "End") { stopAuto(); go(S.length - 1); }
+  else if (k === " " || k === "a" || k === "A") { e.preventDefault(); auto ? stopAuto() : startAuto(); }
+  else if (k === "f" || k === "F") toggleFull();
+  else if (k === "r" || k === "R") play(layer.querySelector(".slide:not(.leave)"));
+  else if (k === "Escape" && auto) stopAuto();
+});
+document.addEventListener("visibilitychange", () => { if (document.hidden) { const sl = layer.querySelector(".slide"); if (sl) { sl.classList.remove("play"); finalize(sl); } } });
+function fromHash() { const m = /^#s(\d+)$/.exec(location.hash); return m ? +m[1] - 1 : 0; }
+addEventListener("hashchange", () => { const i = fromHash(); if (i !== cur) go(i); });
+fit(); go(fromHash());
+</script>
+
+</body>
+</html>
