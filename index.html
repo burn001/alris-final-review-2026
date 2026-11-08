@@ -1195,7 +1195,7 @@ add({ ch: 5, ref: "5장 4절 · [표 4-15]", sub: [
   const X = (m, dd) => (el(m, dd) / 214 * 100).toFixed(1);
   const pct = (m, dd) => (el(m, dd) / 214 * 100).toFixed(1) + "%";
   /* [날짜, 이름, 월, 일, 줄 top(px), 가로 기준(translateX)] */
-  const ms = [["6. 1.", "착수", 6, 1, 46, "-10%"], ["9. 3.", "중간연심", 9, 3, 46, "-50%"], ["11. 11.", "최종연심", 11, 11, 2, "-100%"], ["11. 19.", "평가 자료 제출", 11, 19, 68, "-100%"], ["11. 23.~12. 4.", "서면 평가", 12, 4, 46, "-40%"], ["12. 31.", "종료", 12, 31, 2, "-100%"]];
+  const ms = [["6. 1.", "착수", 6, 1, 46, "-10%"], ["9. 3.", "중간연심", 9, 3, 46, "-50%"], ["11. 11.", "최종연심", 11, 11, 2, "-100%"], ["11. 19.", "평가 자료 제출", 11, 19, 68, "-100%"], ["12. 31.", "종료", 12, 31, 2, "-100%"]];
   return `<div class="slide">${hd(s, "남은 50일 — 남은 과업은 지금 체계로 충분히 수행할 수 있다")}
   <div class="pn a-rise" ${d(.1)} style="left:60px;top:118px;width:250px;height:306px;padding:18px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-color:rgba(79,209,232,.5);box-shadow:0 0 22px rgba(79,209,232,.18)">
     <div class="lab">남은 기간</div>
@@ -1216,7 +1216,6 @@ add({ ch: 5, ref: "5장 4절 · [표 4-15]", sub: [
     <div style="position:relative;height:90px;margin:0 50px 0 20px">
       <div style="position:absolute;left:0;right:0;top:30px;height:6px;border-radius:3px;background:#1a2c49"></div>
       <div class="a-grow" ${d(.8)} style="position:absolute;left:0;width:${X(11, 11)}%;top:30px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--cy2),var(--cy));box-shadow:0 0 8px var(--cy)"></div>
-      <div class="a-fade" ${d(1.1)} style="position:absolute;left:${X(11, 23)}%;width:${(el(12, 4) - el(11, 23)) / 214 * 100}%;top:25px;height:16px;border-radius:4px;background:rgba(244,183,64,.35);border:1px solid var(--warn)"></div>
       ${ms.map((m, i) => `<div class="a-pop" ${d(1 + i * .12)} style="position:absolute;left:${X(m[2], m[3])}%;top:24px;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:${m[2] === 11 && m[3] === 11 ? "var(--cy)" : "var(--bg0)"};border:2.5px solid ${m[2] === 12 && m[3] === 4 ? "var(--warn)" : "var(--cy)"};box-shadow:0 0 8px var(--cy)"></div>
         <div class="a-fade" ${d(1.1 + i * .12)} style="position:absolute;left:${X(m[2], m[3])}%;top:${m[4]}px;transform:translateX(${m[5]});white-space:nowrap;font-size:13px"><b class="mono cy">${m[0]}</b> ${m[1]} <span class="mono" style="color:${m[2] === 12 && m[3] === 4 ? "var(--warn)" : "var(--mu)"}">${i === 0 ? "" : pct(m[2], m[3])}</span></div>`).join("")}</div></div>
   <div class="note a-fade" ${d(1.6)} style="top:574px"><span class="k">요지</span><span>측정 · 운영 판단은 <b class="cy">지금의 자율 실행 에이전트 루프</b>로, 의견수렴 · 협의는 연구진이 — 연구진은 남은 과업을 <b class="cy">연구기간 안에 충분히 수행할 수 있다</b>고 본다</span></div>
