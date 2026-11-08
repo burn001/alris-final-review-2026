@@ -466,7 +466,8 @@ add({ ch: 3, eb: "과제 2 / 3 · 시점", ref: "3장 2절 67–71쪽", sub: [
 add({ ch: 3, eb: "과제 1 / 3 · 근거", ref: "3장 3절 72–75쪽", sub: [
   "근거에서는 법령, 행정규칙, 자치법규로 나눈 조문 검색 층을 새로 세우고, 의미 검색과 단어 검색을 합친 하이브리드 검색으로 운영 경로를 옮겼습니다.",
   "검색 실패의 상당 부분은 조문이 아니라 법령 이름에서 났습니다. 실무 통칭을 실제 법령에 잇지 못한 것입니다.",
-  "전환 전후 정확성은 3.71에서 3.97로 올랐고 완결성은 4.24에서 4.06으로 내려갔습니다. 조문 단위 법령 검색 성공률은 운영 서비스에서 78.33으로 목표 75를 넘었습니다."],
+  "전환 전후 5점 만점의 정확성은 3.71에서 3.97로 올랐고 완결성은 4.24에서 4.06으로 내려갔습니다. 이 점수를 읽는 법은 다음 장면에서 말씀드립니다.",
+  "조문 단위 법령 검색 성공률은 운영 서비스에서 78.33으로 목표 75를 넘었습니다."],
   html: (s) => {
   const nodes = [["질의", "실무 용어 · 통칭"], ["법령 이름 식별", "통칭 → 실제 법령"], ["조문 검색 층", "의미 + 단어 검색"], ["근거 조문", "원문 대조"]];
   return `<div class="slide">${hd(s, "조문 검색 층의 재구성과 하이브리드 검색 전환")}
@@ -474,7 +475,7 @@ add({ ch: 3, eb: "과제 1 / 3 · 근거", ref: "3장 3절 72–75쪽", sub: [
     <div style="font-size:19px;font-weight:700">${n[0]}</div><div class="mu" style="font-size:14px;margin-top:2px">${n[1]}</div></div>`).join("")}</div>
   <svg style="position:absolute;left:60px;top:150px" width="1160" height="20">${[0, 1, 2].map((i) => `<path class="a-draw" ${d(.4 + i * .2)} style="--len:40" d="M${260 * (i + 1) + 40 * i + 3} 10 h34" stroke="#4fd1e8" stroke-width="2.5" fill="none"/>`).join("")}</svg>
   <div class="a-fade" ${d(1)} style="position:absolute;left:360px;top:206px;width:260px;text-align:center;font-size:15px"><span class="warn">병목 · 실무 통용어 식별</span><br><span class="mono num" style="font-size:22px;font-weight:700"><span class="mu2">0/8</span> <span class="cy">→ 6/8</span></span><span class="mu2" style="font-size:12px"> (중간 보고)</span></div>
-  <div class="lab a-fade" ${d(1.1)} style="position:absolute;left:60px;top:290px">기본 설정 전환 전후 · 같은 200문항, 1~5점 절대 판정, 2026. 10. 2.</div>
+  <div class="lab a-fade" ${d(1.1)} style="position:absolute;left:60px;top:290px">기본 설정 전환 전후 · 같은 200문항, 1~5점 절대 판정(5점 만점), 2026. 10. 2. — 읽는 법은 다음 장면</div>
   <div style="position:absolute;left:60px;top:320px;width:720px;display:grid;grid-template-columns:1fr 1fr;gap:16px">${[["정확성", "3.71", "3.97", "#4fd1e8"], ["완결성", "4.24", "4.06", "#f4b740"]].map((k, i) => `<div class="pn a-rise" ${d(1.2 + i * .15)} style="position:relative;padding:18px 22px;height:130px">
     <div class="mu" style="font-size:17px">${k[0]}</div><div style="display:flex;align-items:baseline;gap:14px;margin-top:8px"><span class="mono num mu2" style="font-size:34px;font-weight:700">${k[1]}</span><span class="mu2" style="font-size:24px">→</span><span class="mono num" style="font-size:52px;font-weight:700;color:${k[3]};text-shadow:0 0 14px ${k[3]}" data-count="${k[2]}">${k[2]}</span></div></div>`).join("")}</div>
   <div class="pn a-rise" ${d(1.4)} style="left:808px;top:290px;width:412px;height:160px;padding:18px 22px">
@@ -484,6 +485,35 @@ add({ ch: 3, eb: "과제 1 / 3 · 근거", ref: "3장 3절 72–75쪽", sub: [
     <span style="font-size:18px">조문 단위 법령 검색 성공률 <b>S</b> · 서비스 설정</span><span class="mono num cy glow" style="font-size:38px;font-weight:700" data-count="78.33">78.33</span><span class="cy">%</span>
     <div class="bar" style="flex:1"><i class="a-grow" ${d(1.8)} style="width:78.33%"></i><span style="position:absolute;left:75%;top:-6px;bottom:-6px;border-left:2px dashed #e6eef8"></span></div><span class="mono mu" style="font-size:14px">목표 75</span><span class="chip cy a-stamp" ${d(2.1)}>달성</span></div>
   <div class="note a-fade" ${d(1.9)} style="top:566px"><span class="k">NOTE</span><span>S는 별도 표본 300문항, 2026. 11. 7. 측정</span></div>
+  </div>`; } });
+
+/* 11-1 점수 지표 읽는 법 — 박사님 지시(11.08.): 숫자만 나온 점수 지표 설명 보강, 완결성 하락 설명.
+   근거: 3장 3절·4장 2절 4)(원고), 원장 N-F2·R7-2, docs/research/2026-10-02-luna2-accuracy-remeasure.md */
+add({ ch: 3, eb: "과제 1 / 3 · 근거", ref: "3장 3절 · 4장 2절 4)", sub: [
+  "앞 장면의 3.71, 3.97 같은 점수는 세 지표와 다른 척도입니다. 같은 200문항의 답을 언어모델 판정기가 1점에서 5점까지 매긴 절대 평가입니다.",
+  "판정기는 어느 설정이 만든 답인지 모르는 상태에서, 근거 조문에 비추어 답의 내용이 맞는지를 정확성으로, 질문에 빠짐없이 답했는지를 완결성으로 매깁니다. 중대 오류는 중대한 오류가 들어간 답의 비율입니다.",
+  "설정을 바꾼 뒤 정확성은 0.26점 올랐고 중대 오류 비율은 21.5%에서 14.3%로 줄었습니다.",
+  "완결성은 0.18점 내려갔습니다. 구간이 0을 넘지 않으므로 실제 하락입니다. 연구 기록에서는 생성 모델 쪽의 효과로, 답이 간결해진 대가로 봅니다.",
+  "정확성과 중대 오류를 얻고 완결성을 일부 내준 전환이며, 이 하락은 보고서에도 그대로 적었습니다."],
+  html: (s) => {
+  const M = [["정확성", "답의 내용이 근거 조문에 비추어 맞는가", "3.71", "3.97", "+0.26", "+0.105 ~ +0.415", 1, "향상"],
+    ["완결성", "질문에 빠짐없이 답했는가", "4.24", "4.06", "−0.18", "−0.305 ~ −0.058", 0, "하락"],
+    ["중대 오류 비율", "중대한 오류가 들어간 답의 비율 · 낮을수록 좋음", "0.215", "0.143", "−0.073", "−0.128 ~ −0.015", 1, "개선"]];
+  const scale = (a, b, good, i) => { const x = (v) => ((v - 1) / 4 * 100).toFixed(1); return `<div style="position:relative;height:30px;margin-top:10px">
+      <div style="position:absolute;left:0;right:0;top:13px;height:4px;border-radius:2px;background:#1a2c49"></div>
+      ${[1, 2, 3, 4, 5].map((t) => `<div class="mono mu2" style="position:absolute;left:${x(t)}%;top:20px;transform:translateX(-50%);font-size:11px">${t}</div>`).join("")}
+      <div style="position:absolute;left:${x(+a)}%;top:7px;width:16px;height:16px;margin-left:-8px;border-radius:50%;border:2px solid #7f93b3;background:var(--bg0)"></div>
+      <div class="a-pop" ${d(.8 + i * .2)} style="position:absolute;left:${x(+b)}%;top:5px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:${good ? "var(--cy)" : "var(--bad)"};box-shadow:0 0 10px ${good ? "var(--cy)" : "var(--bad)"}"></div></div>`; };
+  return `<div class="slide">${hd(s, "점수 지표 읽는 법 — 정확성 · 완결성 · 중대 오류")}
+  <div class="pn a-rise" ${d(.1)} style="left:60px;top:118px;width:1160px;height:86px;padding:12px 22px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:center">
+    ${[["표본", "같은 200문항 · 전환 전후"], ["척도", "1~5점 절대 판정(5점 만점)"], ["판정", "언어모델 판정기 · 어느 설정의 답인지 가림 · 두 회"], ["주의", "세 지표(S · C · T)와 다른 척도"]].map((x) => `<div><div class="lab">${x[0]}</div><div style="font-size:15px;margin-top:4px">${x[1]}</div></div>`).join("")}</div>
+  <div style="position:absolute;left:60px;right:60px;top:220px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">${M.map((m, i) => `<div class="pn a-rise" ${d(.3 + i * .15)} style="position:relative;padding:16px 20px;height:290px;${m[6] ? "" : "border-color:rgba(255,122,102,.55);box-shadow:0 0 18px rgba(255,122,102,.15)"}">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="h3">${m[0]}</span><span class="chip" style="color:${m[6] ? "var(--cy)" : "var(--bad)"}">${m[7]}</span></div>
+    <div class="mu" style="font-size:14.5px;margin-top:4px;min-height:42px;line-height:1.45">${m[1]}</div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:8px"><span class="mono num mu2" style="font-size:26px;font-weight:700">${m[2]}</span><span class="mu2">→</span><span class="mono num glow" style="font-size:42px;font-weight:700;color:${m[6] ? "var(--cy)" : "var(--bad)"}">${m[3]}</span></div>
+    ${i < 2 ? scale(m[2], m[3], m[6], i) : `<div class="bar" style="margin-top:14px;height:12px"><i style="width:21.5%;background:#3a4a68;box-shadow:none"></i><i class="a-grow" ${d(1.2)} style="width:14.3%"></i></div><div class="mono mu2" style="font-size:11px;margin-top:6px">비율 · 0~1</div>`}
+    <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--line);font-size:14px"><span class="mu">변화</span> <b class="mono" style="color:${m[6] ? "var(--cy)" : "var(--bad)"}">${m[4]}</b> <span class="mu2" style="font-size:12.5px">95% 구간 ${m[5]}</span></div></div>`).join("")}</div>
+  <div class="note a-fade" ${d(1.4)} style="top:528px;font-size:15.5px"><span class="k">읽기</span><span>세 구간 모두 0을 넘지 않아 잡음이 아닌 실제 변화 — <b class="cy">정확성 · 중대 오류를 얻고</b> <b class="bad">완결성을 일부 내준</b> 전환. 연구 기록상 완결성 하락은 생성 모델 쪽 효과로, 답이 간결해진 대가로 봄</span></div>
   </div>`; } });
 
 /* 12 지역 */
@@ -614,7 +644,7 @@ add({ ch: 3, ref: "3장 7절 · Agent4D", agent: true, sub: [
   </div>`; } });
 
 /* Ⅳ */
-add({ ch: 4, chap: true, dur: 4.5, sub: ["넷째, 성능 평가입니다. 세 지표를 어떻게 세는지부터 차근차근 말씀드리겠습니다."], html: chCard(4, "성능 평가", ["평가 체계 · 표본과 판정", "S · C · T는 어떻게 세나", "목표 대비 결과 · C가 갈리는 이유", "1차 목표의 재판정과 시범 운영"]) });
+add({ ch: 4, chap: true, dur: 4.5, sub: ["넷째, 성능 평가입니다. 세 지표를 어떻게 세는지부터 차근차근 말씀드리겠습니다."], html: chCard(4, "성능 평가", ["평가 체계 · 표본과 판정", "S · 조정 C · 정본 C · T는 어떻게 세나", "목표 대비 결과 · 전문가 검증", "1차 목표의 재판정과 시범 운영"]) });
 
 /* 18 평가 체계 */
 add({ ch: 4, ref: "4장 1절 102–106쪽", sub: [
@@ -657,8 +687,8 @@ function metric(o) {
   <div style="position:absolute;left:942px;top:118px;width:278px;display:flex;flex-direction:column;gap:12px">
     <div class="pn a-rise" ${d(.7)} style="position:relative;padding:14px 16px;border-color:rgba(244,183,64,.45)"><div class="lab" style="color:var(--warn)">${o.cautionTitle}</div>
       <ul class="li w" style="margin-top:8px;gap:7px">${o.caution.map((t) => `<li style="font-size:14.5px;line-height:1.45">${t}</li>`).join("")}</ul></div>
-    <div class="pn a-rise" ${d(.9)} style="position:relative;padding:14px 16px;border-color:rgba(79,209,232,.5)"><div class="lab">이번 값 · 서비스 설정</div>
-      <div style="margin-top:4px;white-space:nowrap"><span class="mono num glow" style="font-size:40px;font-weight:700;color:${o.col}" data-count="${o.v}">${o.v}</span><span style="color:${o.col}">%</span></div>
+    <div class="pn a-rise" ${d(.9)} style="position:relative;padding:14px 16px;border-color:rgba(79,209,232,.5)"><div class="lab">${o.vlab || "이번 값 · 서비스 설정"}</div>
+      <div style="margin-top:4px;white-space:nowrap"><span class="mono num glow" style="font-size:${o.vfs || 40}px;font-weight:700;color:${o.col}"${o.count === false ? "" : ` data-count="${o.v}"`}>${o.v}</span><span style="color:${o.col}">${o.unit ?? "%"}</span></div>
       <div class="mu" style="font-size:13.5px;line-height:1.45">${o.vnote}</div></div></div>
   <div class="note a-fade" ${d(1.6)} style="top:566px;font-size:16px"><span class="k">핵심</span><span>${o.key}</span></div>
   </div>`;
@@ -686,25 +716,50 @@ add({ ch: 4, ref: "4장 1절 102–106쪽", sub: [
     vnote: "별도 표본 300문항, 2026. 11. 7. · 시험 설정 86.68% · <b class=\"cy\">목표 달성</b>",
     key: "S는 <b class=\"cy\">검색</b>이 근거를 찾아오는지를 잰다 — 분모를 「찾을 수 있는 조문」으로 묶어 데이터 확장과 검색 품질을 섞지 않는다" }) });
 
+add({ ch: 4, ref: "4장 2절 3) 110쪽", sub: [
+  "둘째 지표 C, 정답 일치율은 두 가지로 셉니다. 먼저 조정 C입니다.",
+  "조정 C는 판정을 한 모델에 맡기지 않습니다. 두 회사의 판정 모델이 각각 시스템 답의 결론이 질의회신과 같은지 판정합니다.",
+  "둘이 일치하면 그대로 확정하고, 갈리면 조정자가 어느 쪽이 시스템 답인지 가린 채 그 시점의 법령 근거를 보고 다시 판정합니다. 점수를 올리는 판정은 법제처 근거가 받쳐야 합니다.",
+  "그래도 가리지 못한 문항이 남으면 그 문항을 모두 오답으로 본 값이 하한, 모두 정답으로 본 값이 상한입니다.",
+  "개발 50문항의 서비스 설정에서 32문항이 정답으로 확정되어 하한 0.64, 가리지 못한 14문항을 더한 상한은 0.92입니다. 이 14문항이 전문가 검증 대상입니다."],
+  html: metric({ k: "C", name: "정답 일치율 · 조정 C", goal: 85, col: "var(--cy)", v: "0.64~0.92", unit: "", count: false, vfs: 34, vlab: "이번 값 · 개발 50문항 · 서비스 설정",
+    title: "조정 C는 어떻게 세나 — 갈린 판정을 근거로 다시 가린다",
+    q: "시스템 답의 <b class=\"cy\">결론</b>이 질의회신과 같은가 — 판정 모델 하나에 맡기지 않고 <b class=\"cy\">갈린 판정은 근거로 다시 가려서</b>",
+    formula: `<div style="font-size:15px;line-height:1.7"><b class="cy">하한</b> = 정답 확정 ÷ 전체<br><b class="cy">상한</b> = (정답 확정 + 가리지 못함) ÷ 전체</div><div style="font-size:14px;color:var(--mu);margin-top:4px">정답 확정 = 두 판정 일치 + 조정으로 정답</div>`,
+    how: "판정자 = 두 회사의 판정 모델 + 조정자. 조정자는 어느 쪽이 시스템 답인지 모르는 상태에서 그 시점의 법령 근거로 판정한다",
+    example: `<div style="display:grid;grid-template-columns:34px 1fr 1fr 1.5fr;gap:6px 8px;align-items:center;margin-top:12px;font-size:13.5px">
+      <span></span><span class="mono mu2" style="font-size:12px">판정 모델 ㄱ</span><span class="mono mu2" style="font-size:12px">판정 모델 ㄴ</span><span class="mono mu2" style="font-size:12px">조정 → 결과</span>
+      ${[["1", "같음", "같음", "일치 → 정답 확정", 1], ["2", "같음", "다름", "근거 확인 → 정답 확정", 1], ["3", "같음", "다름", "근거로도 못 가림 → 잔여", 2], ["4", "다름", "다름", "일치 → 오답 확정", 0]].map((r, i) => `
+        <span class="mono a-fade" ${d(.5 + i * .25)} style="font-weight:700">${r[0]}</span>
+        <span class="a-pop" ${d(.55 + i * .25)} style="padding:4px 8px;border-radius:5px;text-align:center;border:1px solid ${r[1] === "같음" ? "var(--cy)" : "#5f7393"};color:${r[1] === "같음" ? "var(--cy)" : "var(--mu)"}">${r[1]}</span>
+        <span class="a-pop" ${d(.6 + i * .25)} style="padding:4px 8px;border-radius:5px;text-align:center;border:1px solid ${r[2] === "같음" ? "var(--cy)" : "#5f7393"};color:${r[2] === "같음" ? "var(--cy)" : "var(--mu)"}">${r[2]}</span>
+        <span class="a-rise" ${d(.7 + i * .25)} style="padding:4px 8px;border-radius:5px;border:1.5px solid ${r[4] === 1 ? "var(--cy)" : r[4] === 2 ? "var(--bad)" : "#3a4a68"};background:${r[4] === 1 ? "rgba(79,209,232,.12)" : r[4] === 2 ? "rgba(255,122,102,.12)" : "transparent"};font-weight:700">${r[3]}</span>`).join("")}</div>
+      <div class="a-rise" ${d(1.8)} style="margin-top:14px;padding-top:10px;border-top:1px solid var(--line);font-size:16px;line-height:1.6">
+        하한 = 정답 확정 2 ÷ 4 = <b class="mono cy">0.50</b><br>상한 = (2 + 못 가린 1) ÷ 4 = <b class="mono cy">0.75</b></div>
+      <div class="a-fade" ${d(2)} style="font-size:13.5px;color:var(--bad);margin-top:6px">3번처럼 못 가린 문항이 상향분 → 전문가가 판정해 최종 값을 정함</div>`,
+    cautionTitle: "아직 보고값인 이유", caution: ["두 회사 판정의 일치도 등 미리 정한 관문을 아직 넘지 못함(두 회사 일치 0.883 < 0.93)", "그래서 평균 계산에는 정본 C를 쓰고 조정 C는 함께 보고", "최종 C = 하한 + 전문가가 정답으로 확인한 문항"],
+    vnote: "정답 확정 32 · <b class=\"bad\">가리지 못함 14</b> · 오답 4 (50문항) — 상향분 0.28이 전문가 검증 대상",
+    key: "조정 C는 <b class=\"cy\">확실한 부분(하한)</b>과 <b class=\"bad\">판정자가 가리지 못한 부분(상향분)</b>을 나눈다 — <b class=\"warn\">상향분은 전문가 검증으로 확정</b>" }) });
+
 add({ ch: 4, ref: "4장 1절 102–106쪽", sub: [
-  "둘째 지표 C, 전체 정답 일치율입니다. 시스템이 내린 법적 결론이 정답, 곧 국토교통부 질의회신의 결론과 같은지를 봅니다.",
-  "판정은 언어모델 판정기가 합니다. 결론의 방향과 근거가 함께 맞으면 정답으로 세고, 표현의 강도만 다른 경우도 정답으로 봅니다. 같은 판정 모델로 두 번 판정해 평균합니다.",
+  "다음은 정본 C입니다. 조정 C와 같이 시스템이 내린 법적 결론이 국토교통부 질의회신의 결론과 같은지를 보되, 판정 모델 하나가 판정합니다.",
+  "판정은 언어모델 판정기 하나가 합니다. 시스템 답의 결론이 질의회신의 결론과 같은지 다른지를 둘 중 하나로 판정하고, 같은 판정 모델로 두 번 판정해 평균합니다. 이것이 정본 C입니다.",
   "C는 정답으로 판정된 문항 수를 판정한 문항 수로 나눈 값입니다.",
   "판정기를 바꾸면 같은 답에서도 13~16점이 움직이기 때문에, 올해 값은 같은 판정기로 다시 잰 베이스라인과만 비교합니다. 판정 기준은 아직 다시 세우는 중이어서 운영 서비스의 C 65.00%는 판정 기준 확정 뒤에 판정합니다.",
   "C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정합니다."],
-  html: metric({ k: "C", name: "전체 정답 일치율", goal: 85, col: "var(--warn)", v: "65.00", title: "C는 어떻게 세나 — 결론이 정답과 같은가",
+  html: metric({ k: "C", name: "정답 일치율 · 정본 C", goal: 85, col: "var(--warn)", v: "65.00", title: "정본 C는 어떻게 세나 — 판정 모델 하나가 판정한다",
     q: "시스템이 내린 <b class=\"cy\">법적 결론</b>이 정답(국토교통부 질의회신)의 결론과 같은가",
     formula: `<div style="display:flex;align-items:center;gap:10px"><b class="cy" style="font-size:20px">C</b> =<div style="text-align:center;font-size:15.5px;line-height:1.35"><div style="border-bottom:1.5px solid var(--ink);padding-bottom:3px">정답으로 판정된 문항 수</div><div style="padding-top:3px">판정한 문항 수</div></div></div>`,
-    how: "판정 주체는 언어모델 판정기(LLM-as-a-Judge). 같은 판정 모델 · 같은 추론 강도로 두 회 판정해 평균한다",
+    how: "정본 판정기 = 언어모델 하나가 결론 일치를 이진(같음 · 다름)으로 판정. 같은 판정 모델 · 같은 추론 강도로 두 회 판정해 평균한다",
     example: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
       <div class="a-rise" ${d(.5)} style="padding:10px 12px;border:1px solid #2c4a74;border-radius:8px"><div class="mono mu2" style="font-size:12px">정답 · 질의회신</div><div style="font-size:15.5px;margin-top:4px;line-height:1.45">결론: <b>허용된다</b><br><span class="mu" style="font-size:13.5px">근거: ○○법 제△조</span></div></div>
       <div class="a-rise" ${d(.7)} style="padding:10px 12px;border:1px solid #2c4a74;border-radius:8px"><div class="mono mu2" style="font-size:12px">시스템의 답</div><div style="font-size:15.5px;margin-top:4px;line-height:1.45">결론: <b>허용된다</b><br><span class="mu" style="font-size:13.5px">근거: ○○법 제△조</span></div></div></div>
-    <div class="a-fade" ${d(.9)} style="margin-top:12px;font-size:14.5px;color:var(--mu)">판정기가 결론의 방향과 근거를 맞대어 등급을 매김</div>
+    <div class="a-fade" ${d(.9)} style="margin-top:12px;font-size:14.5px;color:var(--mu)">판정기가 두 결론이 같은지 「같음 · 다름」 둘 중 하나로 판정</div>
     <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:8px;margin-top:8px">
-      <div class="a-pop" ${d(1.0)} style="padding:10px 12px;border-radius:6px;border:1.5px solid var(--cy);background:rgba(79,209,232,.12)"><div class="mono cy" style="font-size:18px;font-weight:700">A · B 등급 → 정답</div><div style="font-size:13px;color:var(--mu);line-height:1.4;margin-top:3px">결론의 방향과 근거가 함께 일치 · 표현의 강도만 다른 경우 포함</div></div>
-      <div class="a-pop" ${d(1.15)} style="padding:10px 12px;border-radius:6px;border:1.5px solid #3a4a68"><div class="mono" style="font-size:18px;font-weight:700;color:var(--dim)">그 밖 → 오답</div><div style="font-size:13px;color:var(--mu);line-height:1.4;margin-top:3px">정답 판정에 들지 않은 문항</div></div></div>
+      <div class="a-pop" ${d(1.0)} style="padding:10px 12px;border-radius:6px;border:1.5px solid var(--cy);background:rgba(79,209,232,.12)"><div class="mono cy" style="font-size:18px;font-weight:700">결론 같음 → 정답</div><div style="font-size:13px;color:var(--mu);line-height:1.4;margin-top:3px">답의 결론이 질의회신의 결론과 같다고 판정</div></div>
+      <div class="a-pop" ${d(1.15)} style="padding:10px 12px;border-radius:6px;border:1.5px solid #3a4a68"><div class="mono" style="font-size:18px;font-weight:700;color:var(--dim)">결론 다름 → 오답</div><div style="font-size:13px;color:var(--mu);line-height:1.4;margin-top:3px">모든 문항이 둘 중 하나로 정해짐</div></div></div>
     <div class="a-rise" ${d(1.7)} style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:16px;line-height:1.5">두 회 판정 평균으로 300문항 가운데 195문항이 정답이면<br>C = 195 ÷ 300 = <b class="mono cy">65.00%</b> <span class="mu" style="font-size:13px">(이번 서비스 설정 값)</span></div>`,
-    cautionTitle: "판정기가 값을 움직인다", caution: ["같은 2025년 답을 판정기만 바꿔 재면 13.1~15.7점 차이 → 같은 판정기로 다시 잰 베이스라인과만 비교", "판정 기준을 새로 세운 판정기로 재면 84.7%(271문항 분모) — 다음 장면", "생성만 다시 해도 개발 50문항에서 5문항이 움직임"],
+    cautionTitle: "판정기가 값을 움직인다", caution: ["같은 2025년 답을 판정기만 바꿔 재면 13.1~15.7점 차이 → 같은 판정기로 다시 잰 베이스라인과만 비교", "판정 모델 하나에 맡기므로 그 모델이 틀려도 걸러지지 않음 → 앞 장면의 조정 C로 보완", "생성만 다시 해도 개발 50문항에서 5문항이 움직임"],
     vnote: "정본 판정기, 별도 표본 300문항 · 2025년 저장 답 38.33% → 올해 65.00% · <b class=\"warn\">최종 값은 전문가 검증 뒤 확정</b>",
     key: "C는 <b class=\"cy\">결론</b>이 맞는지를 잰다 — 판정기와 판정 기준이 값을 움직이므로 <b class=\"warn\">C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정한다</b>" }) });
 
@@ -749,31 +804,101 @@ add({ ch: 4, ref: "4장 1절 102쪽", sub: [
 /* 19 목표 대비 결과 */
 add({ ch: 4, ref: "4장 2절 2) 108–109쪽", sub: [
   "목표 대비 결과입니다. 판정은 운영 중인 서비스 설정으로 합니다.",
-  "법령 검색 성공률은 78.33%로 목표를 넘어 달성했습니다. 시점별 정확도와 세 지표 평균은 운영 서비스에서 미달이고, 시험 설정에서는 목표를 넘었습니다.",
-  "정답 일치율은 같은 답을 어느 기준으로 채점하느냐에 따라 65.00과 84.7로 갈립니다. C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정합니다.",
+  "법령 검색 성공률은 78.33%로 목표를 넘어 달성했습니다.",
+  "정답 일치율은 판정 기준을 새로 세운 판정기로 재면 84.7%로 목표 85%에 0.3점 모자라고, 시험 설정은 93.4%입니다. 두 회사 판정 모델로 조정한 조정 C는 개발 50문항에서 0.64에서 0.92 사이입니다.",
+  "시점별 정확도와 정본 C로 낸 세 지표 평균은 운영 서비스에서 미달이고, 시험 설정에서는 목표를 넘었습니다.",
+  "정답 일치율의 값들은 모두 보고값이고, 최종 값은 조정 C에서 상향되는 부분을 전문가가 검증한 뒤 확정합니다.",
   "시험 설정은 확증 전이고 생성 비용이 약 22배여서 판정에 쓰지 않았습니다."],
   html: (s) => {
-  const K = [["S", "법령 검색 성공률", 78.33, 75, "달성", "#4fd1e8", "시험 86.68"], ["T", "시점별 검색 정확도", 74.29, 95, "미달", "#ff7a66", "시험 100.0"], ["평균", "세 지표 평균", 72.54, 80, "미달", "#ff7a66", "시험 84.50"], ["C", "전체 정답 일치율", 65.00, 85, "판정 보류", "#f4b740", "전문가 검증 뒤 확정"]];
+  const K = [["S", "법령 검색 성공률", 78.33, 75, "달성", "#4fd1e8", "시험 86.68", 2], ["C", "정답 일치율 · 새 기준", 84.7, 85, "보고값", "#f4b740", "<b style=\"color:#f4b740\">조정 C 0.64~0.92</b>(개발 50) · 정본 65.00<br>전문가 검증 뒤 확정", 1], ["T", "시점별 검색 정확도", 74.29, 95, "미달", "#ff7a66", "시험 100.0", 2], ["평균", "세 지표 평균(정본 C)", 72.54, 80, "미달", "#ff7a66", "시험 84.50", 2]];
   return `<div class="slide">${hd(s, "성과지표의 목표 대비 결과 — 별도 표본 300문항, 2026. 11. 7.")}
   <div style="position:absolute;left:60px;right:60px;top:120px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px">${K.map((k, i) => `<div class="pn a-rise" ${d(.1 + i * .12)} style="position:relative;padding:16px 16px 14px;display:flex;flex-direction:column;align-items:center">
     <div style="align-self:flex-start;display:flex;gap:8px;align-items:baseline"><span class="mono cy" style="font-weight:700">${k[0]}</span><span style="font-size:17px;font-weight:700">${k[1]}</span></div>
     <div style="position:relative;width:212px;height:212px;margin-top:8px">${ringG(k[2], k[3], k[5], 90, 16, .3 + i * .12)}
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="white-space:nowrap"><span class="mono num" style="font-size:40px;font-weight:700;color:${k[5]};text-shadow:0 0 14px ${k[5]}" data-count="${k[2].toFixed(2)}">${k[2].toFixed(2)}</span><span style="color:${k[5]};font-size:18px">%</span></span><span style="font-size:14px;color:#8aa0c2">목표 ${k[3]} ○</span></div></div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="white-space:nowrap"><span class="mono num" style="font-size:40px;font-weight:700;color:${k[5]};text-shadow:0 0 14px ${k[5]}" data-count="${k[2].toFixed(k[7])}">${k[2].toFixed(k[7])}</span><span style="color:${k[5]};font-size:18px">%</span></span><span style="font-size:14px;color:#8aa0c2">목표 ${k[3]} ○</span></div></div>
     <div class="a-stamp" ${d(1.3 + i * .15)} style="margin-top:8px;font-weight:900;font-size:20px;color:${k[5]};border:2.5px solid ${k[5]};padding:2px 14px;border-radius:4px;transform:rotate(-4deg)">${k[4]}</div>
-    <div class="mono mu" style="font-size:13px;margin-top:10px">${k[6]}</div></div>`).join("")}</div>
+    <div class="mu" style="font-size:12.5px;margin-top:8px;text-align:center;line-height:1.4">${k[6]}</div></div>`).join("")}</div>
   <div class="pn a-fade" ${d(1.6)} style="left:60px;top:470px;width:1160px;height:84px;padding:12px 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:15.5px;line-height:1.5;color:#c4d2e6">
     <div>판정은 <b>운영 중인 서비스 설정</b>으로 함 · 시험 설정 = 더 강한 판단 모델과 자치법규 · 연혁 추적, 시점 반영 기능을 더한 설정(생성 비용 약 22배 · 응답 시간 약 1.7배)</div>
     <div>인용 품질 3종(목표 100% 유지) · 조례 참조 응답시간(목표 3초 이내)은 <b class="warn">남은 기간 측정</b> · 흰 점은 목표 위치</div></div>
-  <div class="note a-fade" ${d(1.8)} style="top:572px"><span class="k">NOTE</span><span>C는 채점 기준에 따라 <b class="warn">65.00과 84.7</b>로 갈린다(시험 66.83) — <b class="warn">C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정하고</b>, 그때 달성 여부를 판단</span></div>
+  <div class="note a-fade" ${d(1.8)} style="top:572px"><span class="k">NOTE</span><span>C는 <b class="warn">새 기준 84.7(목표에 0.3 모자람, 시험 93.4)</b> · 조정 C 0.64~0.92 · 정본 65.00이 모두 보고값 — <b class="warn">최종 값은 조정 C의 상향분을 전문가가 검증한 뒤 확정</b>(다음 장면들)</span></div>
   </div>`; } });
+
+/* 19-0 정본 C와 조정 C의 차이 — 박사님 지시(11.08.). 근거: ADR-0414·0433·0473, docs/research/2026-11-02-c-adjudicated-judge.md, 원장 N-B8 */
+add({ ch: 4, ref: "4장 2절 3) 110쪽", sub: [
+  "정본 C와 조정 C는 채점하는 방식이 다릅니다.",
+  "정본 C는 판정 모델 하나가 결론이 같은지 다른지를 판정합니다. 모든 문항이 정답이나 오답 중 하나로 정해지지만, 그 모델이 틀려도 걸러지지 않습니다.",
+  "조정 C는 두 회사의 판정 모델이 따로 판정합니다. 둘이 일치하면 그대로 두고, 갈리면 조정자가 어느 쪽이 시스템 답인지 가린 채 법령 근거를 보고 다시 판정합니다. 점수를 올리는 판정은 법제처 근거가 받쳐야 합니다.",
+  "그래도 가리지 못한 문항이 남습니다. 그래서 조정 C는 범위로 나옵니다. 가리지 못한 문항을 모두 오답으로 보면 하한, 모두 정답으로 보면 상한입니다.",
+  "개발 50문항에서 조정 C는 하한 0.64, 상한 0.92였고, 그 차이 0.28이 가리지 못한 14문항입니다."],
+  html: (s) => {
+  const step = (t, sub, col, dl, w) => `<div class="a-pop" ${d(dl)} style="padding:8px 12px;border-radius:7px;border:1.5px solid ${col};background:rgba(10,20,36,.6);${w ? "width:" + w + "px;" : ""}text-align:center"><div style="font-size:15px;font-weight:700">${t}</div>${sub ? `<div class="mu" style="font-size:12.5px;margin-top:2px;line-height:1.35">${sub}</div>` : ""}</div>`;
+  const arr = (dl) => `<svg class="a-fade" ${d(dl)} width="20" height="20" style="display:block;margin:2px auto"><path d="M10 0 V14 M4 9 L10 17 L16 9" stroke="#4fd1e8" stroke-width="2" fill="none"/></svg>`;
+  return `<div class="slide">${hd(s, "정본 C와 조정 C는 무엇이 다른가")}
+  <div class="pn a-rise" ${d(.1)} style="left:60px;top:118px;width:430px;height:430px;padding:16px 20px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="h3">정본 C</span><span class="chip" style="color:var(--mu)">평균 산출에 쓰는 값</span></div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;align-items:center">
+      ${step("시스템의 답 + 질의회신", "", "#2c4a74", .3, 290)}${arr(.4)}
+      ${step("판정 모델 하나", "결론이 같은가 · 다른가 · 두 회 평균", "#e6eef8", .5, 290)}${arr(.6)}
+      <div style="display:flex;gap:10px">${step("정답", "", "#4fd1e8", .7, 140)}${step("오답", "", "#5f7393", .75, 140)}</div></div>
+    <div class="a-fade" ${d(.9)} style="margin-top:16px;font-size:15px;line-height:1.5">모든 문항이 <b>정답 · 오답 중 하나</b>로 정해짐 → 값 하나</div>
+    <div class="a-fade" ${d(1)} style="margin-top:8px;font-size:14.5px;color:var(--warn);line-height:1.5">약점 — 그 모델이 틀려도 걸러지지 않음<br>판정 모델만 바꿔도 13~16점 이동</div></div>
+  <div class="pn a-rise" ${d(.3)} style="left:510px;top:118px;width:710px;height:430px;padding:16px 20px;border-color:rgba(79,209,232,.5);box-shadow:0 0 22px rgba(79,209,232,.15)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="h3 cy">조정 C</span><span class="chip cy">판정 기준을 다시 세우는 방식 · 보고값</span></div>
+    <div style="display:grid;grid-template-columns:330px 1fr;gap:16px;margin-top:12px">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        ${step("두 회사의 판정 모델이 따로 판정", "", "#e6eef8", .6, 310)}${arr(.7)}
+        <div style="display:flex;gap:8px">${step("일치", "그대로 확정", "#4fd1e8", .8, 130)}${step("갈림", "조정으로", "#f4b740", .85, 170)}</div>${arr(.95)}
+        ${step("조정자가 다시 판정", "어느 쪽이 시스템 답인지 가린 채 법령 근거로 · 점수를 올리는 판정은 법제처 근거 필수", "#f4b740", 1.0, 310)}${arr(1.1)}
+        <div style="display:flex;gap:8px">${step("가림", "정답 · 오답 확정", "#4fd1e8", 1.2, 140)}${step("가리지 못함", "잔여", "#ff7a66", 1.25, 160)}</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="a-rise" ${d(1.3)} style="padding:12px 14px;border-radius:8px;border:1px solid var(--line);background:rgba(10,20,36,.5)"><div class="lab">값은 범위로 나온다</div>
+          <div style="font-size:15px;line-height:1.6;margin-top:6px"><b class="cy">하한</b> = 잔여를 모두 오답으로<br><b class="cy">상한</b> = 잔여를 모두 정답으로</div></div>
+        <div class="a-rise" ${d(1.45)} style="padding:12px 14px;border-radius:8px;border:1px solid rgba(79,209,232,.5);background:rgba(10,20,36,.5)"><div class="lab">개발 50문항 · 서비스 설정</div>
+          <div style="display:flex;align-items:baseline;gap:10px;margin-top:6px"><span class="mono num" style="font-size:30px;font-weight:700">0.64</span><span class="mu2">~</span><span class="mono num cy glow" style="font-size:34px;font-weight:700">0.92</span></div>
+          <div class="bar" style="height:14px;margin-top:8px"><i class="a-grow" ${d(1.6)} style="width:64%;background:#2c8ab8;box-shadow:none"></i><i class="a-grow" ${d(1.8)} style="left:64%;width:28%;background:repeating-linear-gradient(45deg,#ff7a66 0 6px,#a5473b 6px 12px);box-shadow:0 0 10px rgba(255,122,102,.4)"></i></div>
+          <div style="font-size:14px;margin-top:6px;line-height:1.45">차이 0.28 = <b class="bad">가리지 못한 14문항</b> · 오답 확정 4문항</div></div>
+        <div class="a-fade" ${d(1.7)} style="font-size:13px;color:var(--mu);line-height:1.45">미리 정한 일치도 조건을 아직 넘지 못해 정본으로 바꾸지 않고 보고값으로 적음</div></div></div></div>
+  <div class="note a-fade" ${d(1.9)} style="top:566px"><span class="k">차이</span><span>정본 C는 <b>한 판정 모델의 판단을 그대로</b> 쓰고, 조정 C는 <b class="cy">판정자끼리 갈린 문항을 근거로 다시 가려</b> 확실한 부분(하한)과 가리지 못한 부분(상향분)을 나눈다</span></div>
+  </div>`; } });
+
+/* 19-0b 전문가 검증의 대상 = 조정 C의 상향분. 근거: ADR-0433(판정 불가 → 전문가 의뢰), ADR-0473(전문가 표본 잔여 60 + 무작위 40, 정본 C = 전문가 보정값 ± 95% 구간) */
+add({ ch: 4, ref: "4장 2절 3) 110쪽 · 5장 4절", sub: [
+  "전문가 검증은 조정 C에서 상향되는 부분, 곧 판정자들이 가리지 못한 문항을 대상으로 합니다.",
+  "판정자들이 근거로 가린 문항은 확정해 두고, 가리지 못한 문항은 전문가가 질의회신과 그 시점의 법령을 직접 보고 판정합니다.",
+  "최종 C는 하한에 전문가가 정답으로 확인한 문항을 더한 값이고, 판정자 전체는 전문가 판정으로 보정해 95% 구간과 함께 냅니다.",
+  "전문가 표본은 가리지 못한 문항 가운데 최대 60문항에 보정용 무작위 40문항을 더해 꾸립니다. 정답 일치율 85% 달성 여부는 이 값으로 판단합니다."],
+  html: (s) => `<div class="slide">${hd(s, "전문가 검증은 조정 C의 상향분을 대상으로 한다")}
+  <div class="pn a-fade" ${d(.1)} style="left:60px;top:118px;width:1160px;height:238px;padding:16px 22px">
+    <div class="lab">한 설정의 문항을 세 부분으로 나누면 · 개발 50문항 서비스 설정 예</div>
+    <div style="position:relative;height:76px;margin-top:22px;display:flex;border-radius:8px;overflow:hidden">
+      <div class="a-grow" ${d(.3)} style="width:64%;background:linear-gradient(90deg,#1e4f7a,#2c8ab8);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700">판정자들이 정답으로 가림 · 32문항</div>
+      <div class="a-grow" ${d(.8)} style="width:28%;background:repeating-linear-gradient(45deg,rgba(255,122,102,.55) 0 10px,rgba(165,71,59,.55) 10px 20px);border:2px solid var(--bad);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;box-shadow:0 0 20px rgba(255,122,102,.4)">가리지 못함 · 14문항</div>
+      <div class="a-grow" ${d(1.1)} style="width:8%;background:#2a3550;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--mu)">오답 4</div></div>
+    <div style="position:relative;height:60px;margin-top:6px;font-size:15px">
+      <div class="a-fade" ${d(1.2)} style="position:absolute;left:0;width:64%;border-top:2px solid #2c8ab8;padding-top:6px;text-align:center"><b class="cy">하한 0.64</b> — 확정해 둠</div>
+      <div class="a-fade" ${d(1.3)} style="position:absolute;left:64%;width:28%;border-top:2px solid var(--bad);padding-top:6px;text-align:center"><b class="bad">상향분 0.28 → 전문가 검증</b></div>
+      <div class="a-fade mu" ${d(1.4)} style="position:absolute;left:0;width:92%;top:34px;text-align:right;font-size:13.5px">상한 0.92 = 오를 수 있는 최대</div></div></div>
+  <div style="position:absolute;left:60px;right:60px;top:374px;display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px">
+    <div class="pn a-rise" ${d(1.4)} style="position:relative;padding:16px 20px;border-color:rgba(79,209,232,.55);box-shadow:0 0 20px rgba(79,209,232,.15)"><div class="lab">최종 C</div>
+      <div style="font-size:20px;font-weight:700;margin-top:10px;line-height:1.5"><span class="cy">하한</span> + <span class="bad">전문가가 정답으로 확인한 문항</span></div>
+      <div class="mu" style="font-size:14px;margin-top:8px;line-height:1.45">판정자 전체는 전문가 판정으로 보정해 <b>95% 구간과 함께</b> 냄</div></div>
+    <div class="pn a-rise" ${d(1.55)} style="position:relative;padding:16px 20px"><div class="lab">전문가 표본</div>
+      <div style="margin-top:8px;display:flex;align-items:baseline;gap:8px"><span class="mono num bad" style="font-size:32px;font-weight:700">60</span><span class="mu" style="font-size:14px">가리지 못한 문항(최대)</span></div>
+      <div style="display:flex;align-items:baseline;gap:8px"><span class="mono num" style="font-size:32px;font-weight:700">+40</span><span class="mu" style="font-size:14px">보정용 무작위</span></div>
+      <div class="mu2" style="font-size:12.5px;margin-top:2px">1,205문항에서 개발 50을 뺀 1,155문항</div></div>
+    <div class="pn a-rise" ${d(1.7)} style="position:relative;padding:16px 20px"><div class="lab">전문가에게 넘기는 문항</div>
+      <ul class="li" style="margin-top:10px;gap:6px"><li style="font-size:14.5px">판정자가 가리지 못한 문항(잔여)</li><li style="font-size:14.5px">질의회신보다 시스템 답이 맞다고 판정된 문항</li><li style="font-size:14.5px">무작위 40 중 20문항은 두 전문가가 따로 판정</li></ul></div></div>
+  <div class="note a-fade" ${d(2)} style="top:566px"><span class="k">원칙</span><span><b class="warn">정답 일치율 85% 달성 여부는 전문가 검증을 반영한 값으로 판단</b> — 정본 · 새 기준 · 조정 값은 그때까지 보고값</span></div>
+  </div>` });
 
 /* 19-1 정답 일치율 C가 갈리는 이유(정본 · 새 기준 · 조정) — 결정 11.08., 박사님 */
 add({ ch: 4, ref: "4장 2절 2)·3) 108–110쪽", sub: [
   "정답 일치율은 같은 답이라도 어떤 판정 기준으로 채점하느냐에 따라 크게 달라집니다.",
   "운영 서비스의 답을 정본 판정기로 재면 65.00, 판정 기준을 새로 세운 판정기로 재면 84.7입니다. 새 기준은 회신이 결론을 낸 271문항이 분모이고, 같은 분모의 정본 값은 65.13입니다.",
-  "두 기준이 갈린 문항만 답의 출처를 가린 채 다시 판정한 조정 값은 65.00에서 66.00으로, 정본과 1점 이내였습니다.",
+  "정본과 새 기준이 갈린 문항만 답의 출처를 가린 채 다시 판정한 조정 값은 65.00에서 66.00으로, 정본과 1점 이내였습니다. 갈린 44문항 가운데 39문항을 판정자가 가리지 못했기 때문입니다.",
   "판정자는 갈린 문항 대부분을 가리지 못했고, 두 답의 자리를 바꾸어도 판정이 유지되는 비율이 0.52로 미리 정한 문턱 0.85에 못 미쳤습니다.",
-  "그래서 새 기준의 값과 조정 값은 보고값으로만 적습니다. C의 최종 값은 남은 기간에 전문가 검증을 거쳐 정본 판정 기준을 확정한 뒤 정하고, 85% 달성 여부도 그때 판단합니다."],
+  "그래서 새 기준의 값과 조정 값은 보고값으로만 적고, 가리지 못한 문항은 전문가 검증으로 넘깁니다."],
   html: (s) => {
   const X0 = 30, X1 = 100, W = 640, px = (v) => ((v - X0) / (X1 - X0) * W).toFixed(1);
   const rows = [
@@ -781,7 +906,7 @@ add({ ch: 4, ref: "4장 2절 2)·3) 108–110쪽", sub: [
     ["시험 설정", "확증 전", [[66.83, "정본", "300문항"], [70.48, "정본", "271"], [93.4, "새 기준", "271"]], [66.83, 67.83], "갈린 19문항"],
     ["2025 저장 답", "같은 판정기", [[40.22, "정본", "271"], [69.6, "새 기준", "271"]], null, "갈린 85문항"]];
   const ticks = [30, 40, 50, 60, 70, 80, 90, 100];
-  return `<div class="slide">${hd(s, "정답 일치율 C가 판정 기준에 따라 갈리는 이유")}
+  return `<div class="slide">${hd(s, "300문항에서 본 세 가지 채점 — 정본 · 새 기준 · 조정 값")}
   <div class="pn a-fade" ${d(.1)} style="left:60px;top:120px;width:770px;height:418px;padding:16px 20px">
     <div style="display:flex;gap:18px;align-items:center;font-size:14px;color:var(--mu)"><span class="lab">같은 답 · 세 가지 채점</span>
       <span><i style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#e6eef8;margin-right:5px"></i>정본 판정기</span>
