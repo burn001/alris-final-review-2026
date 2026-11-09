@@ -753,14 +753,14 @@ add({ ch: 3, ref: "3장 7절 91–100쪽", sub: [
 /* 17 Agent4D 리플레이 */
 add({ ch: 3, ref: "3장 7절 · Agent4D", agent: true, sub: [
   "연구책임자가 정한 과업을 여러 에이전트가 나누어 집행한 기록을 그대로 재생한 화면입니다.",
-  "11월 5일 아침 가장 바빴던 9분으로, 에이전트가 최대 29개까지 동시에 움직였습니다. 4배속, 2분 15초로 반복 재생됩니다.",
+  "11월 5일 아침 가장 바빴던 9분으로, 에이전트가 최대 29개까지 동시에 움직였습니다. 실제 속도로 9분 동안 반복 재생됩니다.",
   "Agent4D는 이 감독을 위해 연구책임자가 개발해 오픈소스로 공개한 도구입니다. 공개 범위는 ALRIS 개발 프로젝트로 한정했고, 에이전트가 맡은 일은 보이되 파일 경로와 명령 같은 세부는 가립니다."],
   html: (s) => {
   const bl = Array.from({ length: 29 }, (_, i) => { const a = i * 2.39996, r = 22 + (i % 7) * 12; return `<circle class="bl" style="--d:${(i * .13).toFixed(2)}s" cx="${(110 + Math.cos(a) * r).toFixed(1)}" cy="${(110 + Math.sin(a) * r).toFixed(1)}" r="3.4" fill="#4fd1e8"/>`; }).join("");
   return `<div class="slide">${hd(s, "작업 리플레이 — 11. 5. 가장 바쁜 9분")}
   <a class="go a-pop" ${d(.2)} href="${AGENT4D.url}" target="_blank" rel="noopener noreferrer" style="left:60px;top:124px;width:650px;height:250px">
     <span class="tri"></span><span style="font-size:36px;font-weight:900;letter-spacing:-.01em">리플레이 열기</span><span class="mu" style="font-size:16px">새 탭에서 바로 재생 · 열리는 데 6~14초</span></a>
-  <div style="position:absolute;left:60px;top:396px;width:650px;display:flex;flex-direction:column">${[["구간", "2026. 11. 5. 07:49~07:58 (9분)"], ["동시 가동", "에이전트 최대 29개"], ["재생", "4배속 · 2분 15초 · 반복"], ["실시간", "화면의 「실시간으로」 단추"]].map((f, i) => `<div class="a-rise" ${d(.5 + i * .1)} style="display:grid;grid-template-columns:130px 1fr;align-items:center;height:42px;border-bottom:1px solid var(--line)"><span class="mono cy" style="font-size:14px">${f[0]}</span><span style="font-size:18px">${f[1]}</span></div>`).join("")}</div>
+  <div style="position:absolute;left:60px;top:396px;width:650px;display:flex;flex-direction:column">${[["구간", "2026. 11. 5. 07:49~07:58 (9분)"], ["동시 가동", "에이전트 최대 29개"], ["재생", "실제 속도(1배속) · 9분 · 반복"], ["실시간", "화면의 「실시간으로」 단추"]].map((f, i) => `<div class="a-rise" ${d(.5 + i * .1)} style="display:grid;grid-template-columns:130px 1fr;align-items:center;height:42px;border-bottom:1px solid var(--line)"><span class="mono cy" style="font-size:14px">${f[0]}</span><span style="font-size:18px">${f[1]}</span></div>`).join("")}</div>
   <div class="pn a-fade" ${d(.4)} style="left:740px;top:124px;width:480px;height:250px;padding:14px;display:flex;gap:16px;align-items:center">
     <svg class="radar" width="220" height="220" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="none" stroke="#22385c"/><circle cx="110" cy="110" r="66" fill="none" stroke="#22385c"/><circle cx="110" cy="110" r="33" fill="none" stroke="#22385c"/>
       <path d="M110 10 V210 M10 110 H210" stroke="#1a2c49"/><g class="sw"><path d="M110 110 L110 10 A100 100 0 0 1 196.6 60 Z" fill="url(#rg)"/></g>
